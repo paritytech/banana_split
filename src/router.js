@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './views/Home.vue'
+import SecurityCheck from './views/SecurityCheck.vue'
 
 Vue.use(Router)
 
@@ -20,6 +21,11 @@ export default new Router({
       component: function () { 
         return import(/* webpackChunkName: "about" */ './views/About.vue')
       }
+    },
+    {
+      path: '/security-check',
+      name: 'security-check',
+      component: SecurityCheck
     }
   ]
 })
