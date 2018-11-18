@@ -4,7 +4,11 @@
     <textarea v-model="secret" placeholder="Your secret goes here"></textarea>
     <p><input type="range" v-model.number="totalShards" v-bind:min="requiredShards" max="16"/>{{totalShards}}</p>
     <p><input type="range" v-model.number="requiredShards" min="1" v-bind:max="totalShards"/>{{requiredShards}}</p>
-    <p>{{shards}}</p>
+
+    <div>
+        <qriously v-for="shard in shards" v-bind:key="shard" v-bind:value="shard" size="200"/>
+    </div>
+
 </div>
 </template>
 

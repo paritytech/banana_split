@@ -6691,6 +6691,11 @@ vue-loader@^15.4.2:
     vue-hot-reload-api "^2.3.0"
     vue-style-loader "^4.1.0"
 
+vue-qriously@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/vue-qriously/-/vue-qriously-1.1.1.tgz#b3a84b05280cb1edfd153bbc003f031995ea7ce7"
+  integrity sha512-AlP8A7LpXWF5lyJsQYxtPE3+qlRqIBX9CP3cn0Oiov9QFNovp+3z7VJLqHRQh6poXO5K2RbZwAiY3hsVVlQbRg==
+
 vue-router@^3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/vue-router/-/vue-router-3.0.1.tgz#d9b05ad9c7420ba0f626d6500d693e60092cc1e9"
