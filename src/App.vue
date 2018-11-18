@@ -1,13 +1,33 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link> |
-      <router-link to="/security-check">Security Check</router-link>
+    <router-view v-if="secure"/>
+    <div v-else>
+      <ul id="security-checklist">
+        <ChecklistItem v-bind:checked="localFile">Serve from local filesystem</ChecklistItem> 
+        <ChecklistItem v-bind:checked="!isOnline">Go offline</ChecklistItem> 
+      </ul>
     </div>
-    <router-view/>
   </div>
 </template>
+
+<script>
+import ChecklistItem from '@/components/ChecklistItem.vue';
+export default {
+    name: 'App',
+    components: {
+        ChecklistItem
+    },
+    computed: {
+        localFile: function() {
+            return (window.location.protocol === 'file:');
+        },
+        secure: function() {
+          return this.localFile && !this.isOnline;
+        }
+    }
+}
+</script>
+
 
 <style>
 #app {
