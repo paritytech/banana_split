@@ -1,10 +1,10 @@
 <template>
-    <h1>Main page</h1>
+    <h1>Combine shards</h1>
 </template>
 
 <script>
 export default {
-    name: 'Main'
+    name: 'Combine'
 }
 </script>
 

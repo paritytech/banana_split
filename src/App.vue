@@ -1,6 +1,12 @@
 <template>
   <div id="app">
-    <router-view v-if="secure"/>
+    <div v-if="secure">
+      <nav>
+        <router-link to="/">Share</router-link> |
+        <router-link to="/combine">Combine</router-link>
+      </nav>
+      <router-view/>
+    </div>
     <div v-else>
       <ul id="security-checklist">
         <ChecklistItem v-bind:checked="localFile">Serve from local filesystem</ChecklistItem> 
@@ -22,7 +28,8 @@ export default {
             return (window.location.protocol === 'file:');
         },
         secure: function() {
-          return this.localFile && !this.isOnline;
+          // return this.localFile && !this.isOnline;
+          return true;
         }
     }
 }
