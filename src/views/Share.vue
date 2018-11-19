@@ -2,11 +2,13 @@
 <div>
     <h1>Share secrets</h1>
     <textarea v-model="secret" placeholder="Your secret goes here"></textarea>
-    <p><input type="range" v-model.number="totalShards" v-bind:min="requiredShards" max="16"/>{{totalShards}}</p>
-    <p><input type="range" v-model.number="requiredShards" min="1" v-bind:max="totalShards"/>{{requiredShards}}</p>
+    <p>Will require at least {{requiredShards}} shards out of <input type="number" v-model.number="totalShards" min="3"/> to reconstruct</p>
+    <p>Your passphrase for the recovery is: {{recoveryPassphrase}}</p>
 
-    <div>
-        <qriously v-for="shard in shards" v-bind:key="shard" v-bind:value="shard" size="200"/>
+    <div class="qr-tiles">
+        <div class="qr-tile" v-for="shard in shards" v-bind:key="shard">
+            <qriously v-bind:value="shard" size="200"/>
+        </div>
     </div>
 
 </div>
@@ -14,6 +16,7 @@
 
 <script>
 const SECRETS = require('secrets.js-grempe');
+import bipPhrase from '../util/bipPhrase';
 
 export default {
     name: 'Share',
@@ -21,10 +24,13 @@ export default {
         return {
             secret: '',
             totalShards: 5,
-            requiredShards: 3
+            recoveryPassphrase: bipPhrase.generate(4)
         }
     },
     computed: {
+        requiredShards: function() {
+            return Math.floor(this.totalShards/2)+1;
+        },
         shards: function() {
             if (this.secret === '') {
                 return []
@@ -36,5 +42,12 @@ export default {
 </script>
 
 <style>
+.qr-tiles {
+    display: flex;
+    width: calc(70%);
+    max-width: 1000px;
+    margin: auto;
+    flex-wrap: wrap;
+}
 
 </style>
