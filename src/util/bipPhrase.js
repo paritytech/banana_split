@@ -32,6 +32,6 @@ export default {
         Crypto.getRandomValues(keys);
 
         var wordlist = this.wordlist;
-        return Array.from(keys.map(key => key%2048)).map(key => wordlist[key]); // Should still be uniform, since we're just dropping the highest bits
+        return Array.from(keys.map(key => key%2048)).map(key => wordlist[key]).join("-"); // Should still be uniform, since we're just dropping the highest bits
     }
 }

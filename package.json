@@ -8,7 +8,9 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "scryptsy": "^2.0.0",
     "secrets.js-grempe": "^1.1.0",
+    "tweetnacl": "^1.0.0",
     "vue": "^2.5.17",
     "vue-qriously": "^1.1.1",
     "vue-router": "^3.0.1"
