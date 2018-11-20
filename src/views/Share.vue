@@ -4,7 +4,7 @@
     <p>What is this thing? <input type="text" v-model="title" placeholder="Like, 'Bitcoin seed phrase'"/></p>
     <textarea v-model="secret" placeholder="Your secret goes here"></textarea>
     <p>Will require any {{requiredShards}} shards out of <input type="number" v-model.number="totalShards" min="3"/> to reconstruct</p>
-    <p>Your passphrase for the recovery is: {{recoveryPassphrase}}</p>
+    <p>Your passphrase for the recovery is: {{recoveryPassphrase}}<button v-on:click="regenPassphrase">&#x21ba;</button></p>
 
     <div class="qr-tiles">
         <div class="qr-tile" v-for="shard in shards" v-bind:key="shard">
@@ -35,17 +35,19 @@ export default {
         requiredShards: function() {
             return Math.floor(this.totalShards/2)+1;
         },
-        titleHash: function() {
-            return crypto.hashString(this.title);
-        },
         shards: function() {
             if (this.secret === '') {
                 return []
             }
-            var encrypted = crypto.encrypt(this.secret, this.titleHash, this.recoveryPassphrase);
+            var encrypted = crypto.encrypt(this.secret, this.title, this.recoveryPassphrase);
             var hexEncrypted = crypto.hexify(encrypted.nonce) + crypto.hexify(encrypted.value);
 
             return SECRETS.share(hexEncrypted, this.totalShards, this.requiredShards);
+        }
+    },
+    methods: {
+        regenPassphrase: function() {
+            this.recoveryPassphrase = bipPhrase.generate(4);
         }
     }
 }
