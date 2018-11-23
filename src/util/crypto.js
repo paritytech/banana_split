@@ -30,6 +30,7 @@ export default {
         var nonce = crypto.randomBytes(24);
         return {
             nonce,
+            salt,
             value: crypto.secretbox(this.strToUint8Array(data), nonce, key)
         }
     }
