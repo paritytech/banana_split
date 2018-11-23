@@ -7,12 +7,17 @@
     </div>
     <div v-else>
         <p>{{encryptedSecret}}</p>
+        <input type="text" v-model="passphrase" v-on:keyup.enter="reconstruct" autofocus/>
+        <button v-on:click="reconstruct">&#x21b2;</button>
     </div>
+    <h2 v-if="recoveredSecret">{{recoveredSecret}}</h2>
 </div>
 </template>
 
 <script>
 const SECRETS = require('secrets.js-grempe');
+
+import crypto from "../util/crypto";
 
 export default {
     name: 'Combine',
@@ -22,7 +27,9 @@ export default {
             nonce: "",
             shards: new Set(),
             qrCodes: [],
-            requiredShards: undefined, // TODO - we need this both in serialization and deserialization
+            requiredShards: undefined,
+            passphrase: "",
+            recoveredSecret: undefined
         }
     },
     computed: {
@@ -34,7 +41,7 @@ export default {
                 return;
             }
             return SECRETS.combine(Array.from(this.shards));
-        },
+        }
     },
     methods: {
         onDecode: function(result) {
@@ -54,12 +61,23 @@ export default {
                 } else {
                     this.nonce = parsed.nonce;
                 }
-                this.requiredShards = 2; // TODO
+                this.requiredShards = 2;  // TODO - we need this both in serialization and deserialization
                 this.qrCodes.push(result);
                 this.shards.add(parsed.data);
             } else {
                 console.log("Shard already seen");
             }
+        },
+        reconstruct: function() {
+            if (!this.passphrase) { return; }
+            this.passphrase = this.passphrase.split(" ").filter(el => el).join('-');
+            console.log(this.passphrase);
+
+            var secret = crypto.dehexify(this.encryptedSecret);
+            var nonce = crypto.dehexify(this.nonce);
+            this.recoveredSecret = crypto.uint8ArrayToStr(
+                crypto.decrypt(secret, this.title, this.passphrase, nonce)
+            );
         }
     }
 }

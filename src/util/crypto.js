@@ -7,11 +7,10 @@ const HexEncodeArray =  [
 
 export default {
     strToUint8Array: function (str) {
-        var uint=new Uint8Array(str.length);
-        for(var i=0,j=str.length;i<j;++i){
-            uint[i]=str.charCodeAt(i);
-        }
-        return uint;
+        return new TextEncoder("utf-8").encode(str);
+    },
+    uint8ArrayToStr: function (arr) {
+        return new TextDecoder("utf-8").decode(arr);
     },
     hashString: function (str) {
         return crypto.hash(this.strToUint8Array(str));
@@ -25,6 +24,13 @@ export default {
         }
         return s;
     },
+    dehexify: function (str) {
+        var arr = new Uint8Array(str.length/2);
+        for (var i = 0; i < arr.length; i++) {
+            arr[i] = parseInt(str.slice(2*i, 2*i+2), 16);
+        }
+        return arr;
+    },
     encrypt: function (data, salt, passphrase) {
         var key = scrypt(passphrase, salt, 1<<13, 8, 1, 32);
         var nonce = crypto.randomBytes(24);
@@ -33,5 +39,9 @@ export default {
             salt,
             value: crypto.secretbox(this.strToUint8Array(data), nonce, key)
         }
+    },
+    decrypt: function (data, salt, passphrase, nonce) {
+        var key = scrypt(passphrase, salt, 1<<13, 8, 1, 32)
+        return crypto.secretbox.open(data, nonce, key);
     }
 }
