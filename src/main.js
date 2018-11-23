@@ -3,6 +3,9 @@ import Vue from 'vue'
 import VueQriously from 'vue-qriously'
 Vue.use(VueQriously)
 
+import QrcodeStream from "vue-qrcode-reader"
+Vue.use(QrcodeStream)
+
 import App from './App.vue'
 import router from './router'
 
