@@ -20,9 +20,10 @@ export default {
             render: function(h) {
                 return h(ShardQrCode, {props: passedProps})
             }
-        })
+        });
+        return this.vm;
     },
-    beforeDestroy: function(_,context) {
+    beforeDestroy: function() {
         this.vm.$el.remove();
         this.vm.$destroy();
     }

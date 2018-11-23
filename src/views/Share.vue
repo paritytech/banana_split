@@ -19,7 +19,6 @@
 
 <script>
 const SECRETS = require('secrets.js-grempe');
-const bser = require('bser');
 
 import bipPhrase from '../util/bipPhrase';
 import crypto from '../util/crypto';
@@ -46,9 +45,15 @@ export default {
                 return []
             }
             var encrypted = crypto.encrypt(this.secret, this.title, this.recoveryPassphrase);
-            var hexEncrypted = crypto.hexify(bser.dumpToBuffer(encrypted));
-
-            return SECRETS.share(hexEncrypted, this.totalShards, this.requiredShards);
+            var hexNonce = crypto.hexify(encrypted.nonce);
+            var hexEncrypted = crypto.hexify(encrypted.value);
+            return SECRETS.share(hexEncrypted, this.totalShards, this.requiredShards).map(function(shard){
+                return JSON.stringify({
+                    title: encrypted.salt,
+                    data: shard,
+                    nonce: hexNonce
+                });
+            });
         }
     },
     methods: {
