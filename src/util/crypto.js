@@ -4,7 +4,7 @@ const SCRYPT = require("scryptsy");
 const SECRETS = require('secrets.js-grempe');
 
 const HexEncodeArray = [
-    '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F',
+    '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f',
 ];
 
 function strToUint8Array(str) {
