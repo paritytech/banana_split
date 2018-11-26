@@ -15,6 +15,10 @@ function uint8ArrayToStr(arr) {
     return new TextDecoder("utf-8").decode(arr);
 }
 
+function hashString(str) {
+    return CRYPTO.hash(strToUint8Array(str));
+}
+
 function hexify(arr) {
     var s = '';
     for (var i = 0; i < arr.length; i++) {
@@ -33,6 +37,21 @@ function dehexify(str) {
     return arr;
 }
 
+function hexToBase64(hexstring) {
+    return btoa(hexstring.match(/\w{2}/g).map(function (a) {
+        return String.fromCharCode(parseInt(a, 16));
+    }).join(""));
+}
+
+function base64toHex(base64) {
+    return window.atob(base64)
+        .split('')
+        .map(function (aChar) {
+            return ('0' + aChar.charCodeAt(0).toString(16)).slice(-2);
+        })
+        .join('')
+}
+
 function encrypt(data, salt, passphrase) {
     var key = SCRYPT(passphrase, salt, 1 << 13, 8, 1, 32);
     var nonce = CRYPTO.randomBytes(24);
@@ -49,7 +68,8 @@ function decrypt(data, salt, passphrase, nonce) {
 }
 
 function share(data, title, passphrase, totalShards, requiredShards) {
-    var encrypted = encrypt(data, title, passphrase);
+    var salt = hashString(title);
+    var encrypted = encrypt(data, salt, passphrase);
     var nonce = hexify(encrypted.nonce);
     var hexEncrypted = hexify(encrypted.value);
     return SECRETS.share(hexEncrypted, totalShards, requiredShards).map(function (shard) {
@@ -58,6 +78,8 @@ function share(data, title, passphrase, totalShards, requiredShards) {
             r: requiredShards,
             d: shard,
             n: nonce
+        }).replace(/[\u007F-\uFFFF]/g, function (chr) {
+            return "\\u" + ("0000" + chr.charCodeAt(0).toString(16)).substr(-4)
         });
     });
 }
@@ -76,7 +98,8 @@ function reconstruct(shards, title, passphrase, encodedNonce) {
     var encryptedSecret = SECRETS.combine(shards);
     var secret = dehexify(encryptedSecret);
     var nonce = dehexify(encodedNonce);
-    return uint8ArrayToStr(decrypt(secret, title, passphrase, nonce));
+    var salt = hashString(title);
+    return uint8ArrayToStr(decrypt(secret, salt, passphrase, nonce));
 }
 
 export default {
