@@ -9,8 +9,8 @@
     </div>
     <div v-else>
       <ul id="security-checklist">
-        <ChecklistItem v-bind:checked="localFile">Serve from local filesystem</ChecklistItem> 
-        <ChecklistItem v-bind:checked="!isOnline">Go offline</ChecklistItem> 
+        <ChecklistItem v-bind:checked="localFile">Serve from local filesystem</ChecklistItem>
+        <ChecklistItem v-bind:checked="!isOnline">Go offline</ChecklistItem>
       </ul>
     </div>
   </div>
@@ -28,7 +28,7 @@ export default {
             return (window.location.protocol === 'file:');
         },
         secure: function() {
-          // return this.localFile && !this.isOnline;
+          // return this.localFile; // TODO: enable this after single file deployment is figured out
           return true;
         }
     }

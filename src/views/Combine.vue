@@ -6,7 +6,6 @@
     <qriously v-for="code in qrCodes" v-bind:key="code" v-bind:value="code" v-bind:size="200" />
     </div>
     <div v-else>
-        <p>{{encryptedSecret}}</p>
         <input type="text" v-model="passphrase" v-on:keyup.enter="reconstruct" autofocus/>
         <button v-on:click="reconstruct">&#x21b2;</button>
     </div>
@@ -36,16 +35,10 @@ export default {
         needMoreShards: function () {
             return (!this.requiredShards) || (this.qrCodes.length < this.requiredShards);
         },
-        encryptedSecret: function () {
-            if (this.needMoreShards) {
-                return;
-            }
-            return SECRETS.combine(Array.from(this.shards));
-        }
     },
     methods: {
         onDecode: function(result) {
-            var parsed = JSON.parse(result);
+            var parsed = crypto.parse(result);
             if (!this.shards.has(parsed.data)) {
                 console.log(parsed);
 
@@ -61,9 +54,14 @@ export default {
                 } else {
                     this.nonce = parsed.nonce;
                 }
-                this.requiredShards = 2;  // TODO - we need this both in serialization and deserialization
+                if ((this.requiredShards) && (this.requiredShards != parsed.requiredShards)) {
+                    console.log("requiredShards mismatch");
+                    return;
+                } else {
+                    this.requiredShards = parsed.requiredShards;
+                }
                 this.qrCodes.push(result);
-                this.shards.add(parsed.data);
+                this.shards.add(parsed);
             } else {
                 console.log("Shard already seen");
             }
@@ -71,13 +69,7 @@ export default {
         reconstruct: function() {
             if (!this.passphrase) { return; }
             this.passphrase = this.passphrase.split(" ").filter(el => el).join('-');
-            console.log(this.passphrase);
-
-            var secret = crypto.dehexify(this.encryptedSecret);
-            var nonce = crypto.dehexify(this.nonce);
-            this.recoveredSecret = crypto.uint8ArrayToStr(
-                crypto.decrypt(secret, this.title, this.passphrase, nonce)
-            );
+            this.recoveredSecret = crypto.reconstruct(Array.from(this.shards), this.passphrase);
         }
     }
 }

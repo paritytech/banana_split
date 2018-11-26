@@ -18,7 +18,6 @@
 </template>
 
 <script>
-const SECRETS = require('secrets.js-grempe');
 
 import bipPhrase from '../util/bipPhrase';
 import crypto from '../util/crypto';
@@ -31,29 +30,20 @@ export default {
         return {
             title: '',
             secret: '',
-            totalShards: 5,
+            totalShards: 3, // TODO: 5
             recoveryPassphrase: bipPhrase.generate(4)
         }
     },
     components: { ShardInfo },
     computed: {
-        requiredShards: function() {
-            return Math.floor(this.totalShards/2)+1;
+        requiredShards: function () {
+            return Math.floor(this.totalShards / 2) + 1;
         },
-        shards: function() {
+        shards: function () {
             if (this.secret === '') {
                 return []
             }
-            var encrypted = crypto.encrypt(this.secret, this.title, this.recoveryPassphrase);
-            var hexNonce = crypto.hexify(encrypted.nonce);
-            var hexEncrypted = crypto.hexify(encrypted.value);
-            return SECRETS.share(hexEncrypted, this.totalShards, this.requiredShards).map(function(shard){
-                return JSON.stringify({
-                    title: encrypted.salt,
-                    data: shard,
-                    nonce: hexNonce
-                });
-            });
+            return crypto.share(this.secret, this.title, this.recoveryPassphrase, this.totalShards, this.requiredShards);
         }
     },
     methods: {
@@ -79,15 +69,6 @@ export default {
         width: calc(70%);
         margin-left: calc(15%);
         flex-direction: row;
-    }
-}
-
-@media print {
-    #share-controls {
-        display: none;
-    }
-    #qr-tiles {
-        flex-direction: column;
     }
 }
 
