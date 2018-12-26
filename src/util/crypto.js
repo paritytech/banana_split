@@ -53,7 +53,7 @@ function base64toHex(base64) {
 }
 
 function encrypt(data, salt, passphrase) {
-    var key = SCRYPT(passphrase, salt, 1 << 13, 8, 1, 32);
+    var key = SCRYPT(passphrase, Buffer.from(salt), 1 << 13, 8, 1, 32);
     var nonce = CRYPTO.randomBytes(24);
     return {
         nonce,
