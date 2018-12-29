@@ -6,7 +6,10 @@
         <textarea v-model="secret" placeholder="Your secret goes here"></textarea>
         <p>Will require any {{requiredShards}} shards out of <input type="number" v-model.number="totalShards" min="3" />
             to reconstruct</p>
-        <p>Your passphrase for the recovery is: {{recoveryPassphrase}}<button v-on:click="regenPassphrase">&#x21ba;</button></p>
+        <p>Your passphrase for the recovery is:</p>
+        <p>
+            <canvas-text v-bind:text="recoveryPassphrase"/>
+            <button v-on:click="regenPassphrase">&#x21ba;</button></p>
         <button v-if="this.secret" v-on:click="print">Print us!</button>
     </div>
 
@@ -23,6 +26,7 @@ import bipPhrase from '../util/bipPhrase';
 import crypto from '../util/crypto';
 
 import ShardInfo from '../components/ShardInfo';
+import CanvasText from '../components/CanvasText';
 
 export default {
     name: 'Share',
@@ -34,7 +38,7 @@ export default {
             recoveryPassphrase: bipPhrase.generate(4)
         }
     },
-    components: { ShardInfo },
+    components: { ShardInfo, CanvasText },
     computed: {
         requiredShards: function () {
             return Math.floor(this.totalShards / 2) + 1;
