@@ -1,11 +1,11 @@
 <template>
   <div id="app">
     <div v-if="secure">
+      <router-view/>
       <nav>
-        <router-link to="/">Share</router-link> |
+        <router-link to="/share">Share</router-link> |
         <router-link to="/combine">Combine</router-link>
       </nav>
-      <router-view/>
     </div>
     <div v-else-if="!localFile">
       <h1>Please save this page to your local drive before use</h1>
