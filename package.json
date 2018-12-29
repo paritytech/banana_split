@@ -5,6 +5,7 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
+    "deploy": "gh-pages -b gh-pages -d dist -a",
     "lint": "vue-cli-service lint",
     "test:unit": "vue-cli-service test:unit"
   },
@@ -26,9 +27,10 @@
     "eslint": "^5.8.0",
     "eslint-plugin-vue": "^5.0.0-0",
     "fast-text-encoding": "^1.0.0",
-    "vue-template-compiler": "^2.5.17",
+    "gh-pages": "^2.0.1",
+    "html-webpack-inline-source-plugin": "1.0.0-beta.2",
     "html-webpack-plugin": "4.0.0-beta.4",
-    "html-webpack-inline-source-plugin": "1.0.0-beta.2"
+    "vue-template-compiler": "^2.5.17"
   },
   "eslintConfig": {
     "root": true,
