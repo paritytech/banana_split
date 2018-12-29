@@ -2,15 +2,21 @@
 <div>
     <div id="share-controls">
         <h1>Share secrets</h1>
-        <p>What is this thing? <input type="text" v-model="title" placeholder="Like, 'Bitcoin seed phrase'" autofocus/></p>
-        <textarea v-model="secret" placeholder="Your secret goes here"></textarea>
+        <p>What is this thing? <input type="text" :disabled="encryptionMode" v-model="title" placeholder="Like, 'Bitcoin seed phrase'" autofocus/></p>
+        <textarea v-model="secret" :disabled="encryptionMode" placeholder="Your secret goes here"></textarea>
         <p>Will require any {{requiredShards}} shards out of <input type="number" v-model.number="totalShards" min="3" />
             to reconstruct</p>
-        <p>Your passphrase for the recovery is:</p>
-        <p>
-            <canvas-text v-bind:text="recoveryPassphrase"/>
-            <button v-on:click="regenPassphrase">&#x21ba;</button></p>
-        <button v-if="this.secret" v-on:click="print">Print us!</button>
+        <button v-on:click="toggleMode">
+            <span v-if="this.encryptionMode">Back to editing data</span>
+            <span v-else>Generate QR codes!</span>
+        </button>
+        <div v-if="this.encryptionMode">
+            <p>Your passphrase for the recovery is:</p>
+            <p>
+                <canvas-text v-bind:text="recoveryPassphrase"/>
+                <button v-on:click="regenPassphrase">&#x21ba;</button></p>
+            <button v-on:click="print">Print us!</button>
+        </div>
     </div>
 
     <div id="qr-tiles">
@@ -35,7 +41,8 @@ export default {
             title: '',
             secret: '',
             totalShards: 3, // TODO: 5
-            recoveryPassphrase: bipPhrase.generate(4)
+            recoveryPassphrase: bipPhrase.generate(4),
+            encryptionMode: false,
         }
     },
     components: { ShardInfo, CanvasText },
@@ -44,7 +51,7 @@ export default {
             return Math.floor(this.totalShards / 2) + 1;
         },
         shards: function () {
-            if (this.secret === '') {
+            if (!this.encryptionMode) {
                 return []
             }
             return crypto.share(this.secret, this.title, this.recoveryPassphrase, this.totalShards, this.requiredShards);
@@ -56,6 +63,9 @@ export default {
         },
         print: function () {
             window.print()
+        },
+        toggleMode: function () {
+            this.encryptionMode = !this.encryptionMode;
         }
     }
 }
