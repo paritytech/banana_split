@@ -37,21 +37,6 @@ function dehexify(str) {
     return arr;
 }
 
-function hexToBase64(hexstring) {
-    return btoa(hexstring.match(/\w{2}/g).map(function (a) {
-        return String.fromCharCode(parseInt(a, 16));
-    }).join(""));
-}
-
-function base64toHex(base64) {
-    return window.atob(base64)
-        .split('')
-        .map(function (aChar) {
-            return ('0' + aChar.charCodeAt(0).toString(16)).slice(-2);
-        })
-        .join('')
-}
-
 function encrypt(data, salt, passphrase) {
     var key = SCRYPT(passphrase, Buffer.from(salt), 1 << 15, 8, 1, 32);
     var nonce = CRYPTO.randomBytes(24);
