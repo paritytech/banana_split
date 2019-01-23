@@ -30,6 +30,7 @@
     "gh-pages": "^2.0.1",
     "html-webpack-inline-source-plugin": "1.0.0-beta.2",
     "html-webpack-plugin": "4.0.0-beta.4",
+    "jest-junit": "^6.0.1",
     "vue-template-compiler": "^2.5.17"
   },
   "eslintConfig": {
@@ -55,5 +56,9 @@
     "> 1%",
     "last 2 versions",
     "not ie <= 8"
-  ]
+  ],
+  "jest-junit": {
+    "outputDirectory": ".test-results/jest",
+    "oputputName": "results.xml"
+  }
 }

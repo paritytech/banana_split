@@ -14,7 +14,7 @@
 </template>
 
 <script>
-const SECRETS = require('secrets.js-grempe');
+/*eslint no-console: ["error", { allow: ["warn", "error"] }] */
 
 import crypto from "../util/crypto";
 
@@ -40,22 +40,20 @@ export default {
         onDecode: function(result) {
             var parsed = crypto.parse(result);
             if (!this.shards.has(parsed.data)) {
-                console.log(parsed);
-
                 if ((this.title) && (this.title != parsed.title)) {
-                    console.log("title mismatch!");
+                    console.error("title mismatch!");
                     return;
                 } else {
                     this.title = parsed.title;
                 }
                 if ((this.nonce) && (this.nonce != parsed.nonce)) {
-                    console.log("nonce mismatch!");
+                    console.error("nonce mismatch!");
                     return;
                 } else {
                     this.nonce = parsed.nonce;
                 }
                 if ((this.requiredShards) && (this.requiredShards != parsed.requiredShards)) {
-                    console.log("requiredShards mismatch");
+                    console.error("requiredShards mismatch");
                     return;
                 } else {
                     this.requiredShards = parsed.requiredShards;
@@ -63,7 +61,7 @@ export default {
                 this.qrCodes.push(result);
                 this.shards.add(parsed);
             } else {
-                console.log("Shard already seen");
+                console.warn("Shard already seen");
             }
         },
         reconstruct: function() {

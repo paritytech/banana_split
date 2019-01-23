@@ -49,3 +49,4 @@ test('works with unicode strings', () => {
     var reconstructed = crypto.reconstruct(parsed.map(p => p.data), parsed[0].title, 'correct-horse-battery-staple', parsed[0].nonce);
     expect(reconstructed).toBe('Текст сообщения');
 })
+
