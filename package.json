@@ -1,7 +1,14 @@
 {
   "name": "banana_split",
+  "license": "GPL-3.0",
+  "description": "Shamir's Secret Sharing for people with friends",
+  "contributors": [
+    "Kirill Pimenov <kirill@parity.io>"
+  ],
+
   "version": "0.1.0",
   "private": true,
+
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
