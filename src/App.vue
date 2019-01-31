@@ -19,20 +19,20 @@ import GoOfflineInfo from './components/GoOfflineInfo'
 import SavePageInfo from './components/SavePageInfo'
 
 export default {
-    name: 'App',
-    components: {GeneralInfo, GoOfflineInfo, SavePageInfo},
-    computed: {
-        localFile: function() {
-          return (window.location.protocol === 'file:');
-        },
-        secure: function() {
-          if (process.env.NODE_ENV === 'production') {
-            return this.localFile && !this.isOnline;
-          } else {
-            return true
-          }
-        }
+  name: 'App',
+  components: {GeneralInfo, GoOfflineInfo, SavePageInfo},
+  computed: {
+    localFile: function() {
+      return (window.location.protocol === 'file:');
+    },
+    secure: function() {
+      if (process.env.NODE_ENV === 'production') {
+        return this.localFile && !this.isOnline;
+      } else {
+        return true
+      }
     }
+  }
 }
 </script>
 

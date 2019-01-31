@@ -14,6 +14,8 @@ Vue.use(OnlinePlugin)
 
 Vue.config.productionTip = false
 
+Vue.prototype.$eventHub = new Vue()
+
 new Vue({
   router,
   render: function (h) { return h(App) }
