@@ -67,6 +67,9 @@ export default {
         toggleMode: function () {
             this.encryptionMode = !this.encryptionMode;
         }
+    },
+    mounted: function() {
+        this.$eventHub.$emit('foldGeneralInfo')
     }
 }
 </script>

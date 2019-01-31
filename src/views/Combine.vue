@@ -69,6 +69,9 @@ export default {
             this.passphrase = this.passphrase.split(" ").filter(el => el).join('-');
             this.recoveredSecret = crypto.reconstruct(Array.from(this.shards), this.passphrase);
         }
+    },
+    mounted: function() {
+        this.$eventHub.$emit('foldGeneralInfo')
     }
 }
 </script>

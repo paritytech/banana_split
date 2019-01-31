@@ -21,6 +21,12 @@ export default {
     name: 'GeneralInfo',
     data: function () {
         return { unfolded: true }
+    },
+    created: function() {
+        var self = this;
+        this.$eventHub.$on("foldGeneralInfo", function() {
+            self.unfolded = false
+        })
     }
 }
 </script>
