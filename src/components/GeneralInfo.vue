@@ -12,6 +12,7 @@
             <p>Banana Split tries to protect your secret from the attack vectors like "attacker is able to intercept everything you're sending to your printer", and that's why you'll have to write down the passphrase on your printouts by hand.</p>
             <p>Banana Split is a self-contained HTML page, and should only be opened from your local Documents folder, while browser is in the Offline mode — this way the risk of compromise will be minimal.</p>
             <p>Recovery can be done on any device with a webcam — just show your QR codes to the webcam and follow the notifications on screen in the process.</p>
+            <p>You can find the source code <a href="https://github.com/paritytech/banana_split">on github.</a></p>
         </div>
     </div>
 </template>
