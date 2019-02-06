@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <ForkMe url="https://github.com/paritytech/banana_split"/>
     <GeneralInfo/>
     <div v-if="secure">
       <router-view/>
@@ -17,10 +18,11 @@
 import GeneralInfo from './components/GeneralInfo'
 import GoOfflineInfo from './components/GoOfflineInfo'
 import SavePageInfo from './components/SavePageInfo'
+import ForkMe from './components/ForkMe'
 
 export default {
   name: 'App',
-  components: {GeneralInfo, GoOfflineInfo, SavePageInfo},
+  components: {GeneralInfo, GoOfflineInfo, SavePageInfo, ForkMe},
   computed: {
     localFile: function() {
       return (window.location.protocol === 'file:');
