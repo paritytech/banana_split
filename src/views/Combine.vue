@@ -59,7 +59,7 @@ export default {
                     this.requiredShards = parsed.requiredShards;
                 }
                 this.qrCodes.push(result);
-                this.shards.add(parsed);
+                this.shards.add(parsed.data);
             } else {
                 console.warn("Shard already seen");
             }
@@ -67,7 +67,7 @@ export default {
         reconstruct: function() {
             if (!this.passphrase) { return; }
             this.passphrase = this.passphrase.split(" ").filter(el => el).join('-');
-            this.recoveredSecret = crypto.reconstruct(Array.from(this.shards), this.passphrase);
+            this.recoveredSecret = crypto.reconstruct(Array.from(this.shards), this.title, this.passphrase, this.nonce);
         }
     },
     mounted: function() {

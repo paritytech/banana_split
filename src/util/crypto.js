@@ -48,7 +48,7 @@ function encrypt(data, salt, passphrase) {
 }
 
 function decrypt(data, salt, passphrase, nonce) {
-    var key = SCRYPT(passphrase, salt, 1 << 15, 8, 1, 32);
+    var key = SCRYPT(passphrase, Buffer.from(salt), 1 << 15, 8, 1, 32);
     return CRYPTO.secretbox.open(data, nonce, key);
 }
 
