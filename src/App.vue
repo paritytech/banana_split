@@ -1,28 +1,24 @@
 <template>
   <div id="app">
-    <ForkMe url="https://github.com/paritytech/banana_split"/>
+    <ForkMe url="https://github.com/lab10-coop/banana_split"/>
     <GeneralInfo/>
-    <div v-if="secure">
-      <router-view/>
+    <div>
       <nav>
         <router-link to="/share">Share</router-link> |
         <router-link to="/combine">Combine</router-link>
       </nav>
+      <router-view/>
     </div>
-    <SavePageInfo v-else-if="!localFile"/>
-    <GoOfflineInfo v-else-if="isOnline"/>
   </div>
 </template>
 
 <script>
 import GeneralInfo from './components/GeneralInfo'
-import GoOfflineInfo from './components/GoOfflineInfo'
-import SavePageInfo from './components/SavePageInfo'
 import ForkMe from './components/ForkMe'
 
 export default {
   name: 'App',
-  components: {GeneralInfo, GoOfflineInfo, SavePageInfo, ForkMe},
+  components: {GeneralInfo, ForkMe},
   computed: {
     localFile: function() {
       return (window.location.protocol === 'file:');

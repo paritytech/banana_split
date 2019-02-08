@@ -3,7 +3,8 @@
   "license": "GPL-3.0",
   "description": "Shamir's Secret Sharing for people with friends",
   "contributors": [
-    "Kirill Pimenov <kirill@parity.io>"
+    "Kirill Pimenov <kirill@parity.io>",
+    "Dietmar Hofer <github.dho@lab10.coop>"
   ],
 
   "version": "0.1.0",

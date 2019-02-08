@@ -6,11 +6,6 @@
         </div>
         <qriously class="print-only" v-bind:value="shard" v-bind:size="600" />
         <qriously class="screen-only" v-bind:value="shard" v-bind:size="200" />
-        <div class="print-only">
-            <p>
-                recovery passphrase is <span class="recovery-blank"/>
-            </p>
-        </div>
     </div>
 </template>
 
@@ -35,7 +30,7 @@ export default {
 @media print {
     .screen-only {
        display: none;
-   } 
+   }
 }
 
 .qr-tile {

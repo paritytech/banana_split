@@ -11,11 +11,7 @@
             <span v-else>Generate QR codes!</span>
         </button>
         <div v-if="this.encryptionMode">
-            <p>Your passphrase for the recovery is:</p>
-            <p>
-                <canvas-text v-bind:text="recoveryPassphrase"/>
-                <button v-on:click="regenPassphrase">&#x21ba;</button></p>
-            <button v-on:click="print">Print us!</button>
+            <button id="print-btn" v-on:click="print">Print us!</button>
         </div>
     </div>
 
@@ -41,7 +37,7 @@ export default {
             title: '',
             secret: '',
             totalShards: 3, // TODO: 5
-            recoveryPassphrase: bipPhrase.generate(4),
+            recoveryPassphrase: "",
             encryptionMode: false,
         }
     },
@@ -79,6 +75,11 @@ export default {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-evenly;
+}
+
+#print-btn {
+    margin-top: 20px;
+    font-size: x-large;
 }
 
 @media screen {

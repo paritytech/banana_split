@@ -1,13 +1,12 @@
 <template>
 <div>
-    <h1>Combine shards<span v-if="title"> for {{title}}</span></h1>
+    <h1>Combine shards<span v-if="title"> for "{{title}}"</span></h1>
     <div v-if="needMoreShards">
     <qrcode-stream v-on:decode="onDecode"/>
     <qriously v-for="code in qrCodes" v-bind:key="code" v-bind:value="code" v-bind:size="200" />
     </div>
     <div v-else>
-        <input type="text" v-model="passphrase" v-on:keyup.enter="reconstruct" autofocus/>
-        <button v-on:click="reconstruct">&#x21b2;</button>
+        <button id="showsecret-btn" v-on:click="reconstruct">Click here to show the secret</button>
     </div>
     <h2 v-if="recoveredSecret">{{recoveredSecret}}</h2>
 </div>
@@ -65,7 +64,6 @@ export default {
             }
         },
         reconstruct: function() {
-            if (!this.passphrase) { return; }
             this.passphrase = this.passphrase.split(" ").filter(el => el).join('-');
             this.recoveredSecret = crypto.reconstruct(Array.from(this.shards), this.title, this.passphrase, this.nonce);
         }
@@ -77,5 +75,7 @@ export default {
 </script>
 
 <style>
-
+    #showsecret-btn {
+        font-size: x-large;
+    }
 </style>
