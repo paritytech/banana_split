@@ -83,7 +83,7 @@ function reconstruct(shards, title, passphrase, encodedNonce) {
     var encryptedSecret = SECRETS.combine(shards);
     var secret = dehexify(encryptedSecret);
     var nonce = dehexify(encodedNonce);
-    var salt = hashString(title);
+    var salt = Buffer.from(hashString(title));
     return uint8ArrayToStr(decrypt(secret, salt, passphrase, nonce));
 }
 
