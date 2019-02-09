@@ -8511,10 +8511,10 @@ vue-loader@^15.4.2:
     vue-hot-reload-api "^2.3.0"
     vue-style-loader "^4.1.0"
 
-vue-qrcode-reader@^1.3.1:
-  version "1.3.3"
-  resolved "https://registry.yarnpkg.com/vue-qrcode-reader/-/vue-qrcode-reader-1.3.3.tgz#acdbc40c426bcde4123c7f22c8354260e022660c"
-  integrity sha512-WA9JKag6zKHgtMqgO4PCTfm0xfRNxk4+9z+a6jwPyH+nF5VeMfXgCEUDq4Jy+8mIRRNq4t/dIRA+SZwcG/9jgA==
+vue-qrcode-reader@^1.3.4:
+  version "1.3.4"
+  resolved "https://registry.yarnpkg.com/vue-qrcode-reader/-/vue-qrcode-reader-1.3.4.tgz#a370fa2f292988a2e9f420574589a48c48f9a08a"
+  integrity sha512-Jwry5qnhMRLv3ge3LvgFGbgn76Pkt0GJIQUdifLq0TlJM3+hj5ygoF6reQK0d9gzAy3yPMX/MMhl51FwqVsiYg==
   dependencies:
     babel-runtime "^6.26.0"
     jsqr "^1.1.0"
