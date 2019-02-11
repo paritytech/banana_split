@@ -1,9 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
-import Info from './views/Info'
-import Share from './views/Share'
-import Combine from './views/Combine'
+import Info from './components/views/Info'
+import Share from './components/views/Share'
+import Combine from './components/views/Combine'
 
 Vue.use(Router)
 

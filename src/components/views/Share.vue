@@ -75,11 +75,11 @@
 
 <script>
 
-import bipPhrase from '../util/bipPhrase';
-import crypto from '../util/crypto';
+import bipPhrase from '../../util/bipPhrase';
+import crypto from '../../util/crypto';
 
-import ShardInfo from '../components/ShardInfo';
-import CanvasText from '../components/CanvasText';
+import ShardInfo from '../ShardInfo';
+import CanvasText from '../CanvasText';
 
 export default {
     name: 'Share',

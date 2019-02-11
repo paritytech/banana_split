@@ -3,6 +3,9 @@
     <div class="columns">
         <div>
             <div v-if="needMoreShards" class="scan-preview" >
+                <div class="scan-preview--loading">
+                  Waiting<br/>for<br/>camera
+                </div>
                 <qrcode-stream v-on:decode="onDecode" class="camera-mirror"/>
             </div>
             <div v-else class="enter-passphrase">
@@ -63,8 +66,8 @@
 <script>
 /*eslint no-console: ["error", { allow: ["warn", "error"] }] */
 
-import crypto from "../util/crypto";
-import ScanMe from "../components/ScanMe";
+import crypto from "../../util/crypto";
+import ScanMe from "../ScanMe";
 
 export default {
     name: 'Combine',
@@ -153,15 +156,24 @@ export default {
     max-width: 1024px;
 }
 .columns > div {
-    width: 50%;
+    min-width: 25%;
     margin-right: 20px;
 }
 .columns > div >h3:first-child {
     margin-top: 0;
 }
 .scan-preview {
-    width: 100%;
+    width: 20em;
     margin: 0 auto;
+    position: relative;
+}
+.scan-preview--loading {
+  color: #b2b2b2;
+  position: absolute;
+  padding: 4em 0;
+  font-size: large;
+  text-align: center;
+  width: 100%;
 }
 .shares {
     display: flex;
