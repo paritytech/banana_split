@@ -1,10 +1,10 @@
 <template>
     <div>
-      <h1>Please save this page to your local drive before use</h1>
+      <h2>Please save this page to your local drive before use</h2>
       <div>
         Please <a href="." download="BananaSplit.html">save this html file</a> to a folder on your local drive,
         and then open the file from there.
-        </div>
+      </div>
     </div>
 </template>
 
@@ -15,5 +15,4 @@ export default {
 </script>
 
 <style>
-
 </style>

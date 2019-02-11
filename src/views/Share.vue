@@ -1,28 +1,75 @@
 <template>
 <div>
-    <div id="share-controls">
-        <h1>Share secrets</h1>
-        <p>What is this thing? <input type="text" :disabled="encryptionMode" v-model="title" placeholder="Like, 'Bitcoin seed phrase'" autofocus/></p>
-        <textarea v-model="secret" :disabled="encryptionMode" placeholder="Your secret goes here"></textarea>
-        <p>Will require any {{requiredShards}} shards out of <input type="number" v-model.number="totalShards" min="3" />
-            to reconstruct</p>
-        <button v-on:click="toggleMode">
-            <span v-if="this.encryptionMode">Back to editing data</span>
-            <span v-else>Generate QR codes!</span>
-        </button>
+    <form id="share-controls" @submit.prevent="toggleMode">
+        <h2>Split secrets</h2>
+        <div>Carve your secrets into shards.</div>
+        <p>
+            <label for="name">Name</label>
+            <input
+                id="name"
+                type="text"
+                :disabled="encryptionMode"
+                v-model="title"
+                placeholder="Like, 'Bitcoin seed phrase'"
+                autofocus
+                style="min-width: 20em"
+                required="required"
+            />
+        </p>
+        <p>
+            <label for="secret">Secret</label>
+            <textarea
+                id="secret"
+                v-model="secret"
+                :disabled="encryptionMode"
+                placeholder="Your secret goes here"
+                style="min-width: 20em"
+                required="required"
+            ></textarea>
+        </p>
+
+        <p>Will require any {{requiredShards}} shards out of
+            <input
+                type="number"
+                v-model.number="totalShards"
+                min="3"
+                style="width: 3em"
+                required="required"
+            />
+            to reconstruct
+        </p>
+        <input
+            v-if="!this.encryptionMode"
+            type="submit"
+            value="Generate QR codes!"
+        />
+        <input
+            v-if="this.encryptionMode"
+            type="submit"
+            value="Back to editing data"
+        />
+
         <div v-if="this.encryptionMode">
             <p>Your passphrase for the recovery is:</p>
             <p>
                 <canvas-text v-bind:text="recoveryPassphrase"/>
-                <button v-on:click="regenPassphrase">&#x21ba;</button></p>
-            <button v-on:click="print">Print us!</button>
+                <!--
+                 This button is actually not necessary from UX view,
+                 but to regenerate passphrase. Might combine it with mode switching.
+                 -->
+                <button v-on:click="regenPassphrase">&#x21ba;</button>
+            </p>
+            <p>
+                <button v-on:click="print">Print the shards</button>
+            </p>
+            <p> ⚠ Dont forget to write the passphrase to the printed QR codes!</p>
         </div>
-    </div>
+    </form>
 
-    <div id="qr-tiles">
-        <shard-info v-for="shard in shards" v-bind:key="shard" v-bind:shard="shard" v-bind:requiredShards="requiredShards"
-            v-bind:title="title" />
-    </div>
+    <!--<div id="qr-tiles">-->
+        <!--<shard-info v-for="shard in shards" v-bind:key="shard" v-bind:shard="shard" v-bind:requiredShards="requiredShards"-->
+            <!--v-bind:title="title" />-->
+    <!--</div>-->
 </div>
 </template>
 
@@ -80,7 +127,11 @@ export default {
     flex-wrap: wrap;
     justify-content: space-evenly;
 }
-
+label {
+    font-size: small;
+    color: gray;
+    display: block;
+}
 @media screen {
     #qr-tiles {
         width: calc(70%);
@@ -88,5 +139,4 @@ export default {
         flex-direction: row;
     }
 }
-
 </style>

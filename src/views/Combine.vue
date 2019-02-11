@@ -1,15 +1,62 @@
 <template>
 <div>
-    <h1>Combine shards<span v-if="title"> for {{title}}</span></h1>
-    <div v-if="needMoreShards">
-    <qrcode-stream v-on:decode="onDecode"/>
-    <qriously v-for="code in qrCodes" v-bind:key="code" v-bind:value="code" v-bind:size="200" />
+    <div class="columns">
+        <div>
+            <div v-if="needMoreShards" class="scan-preview" >
+                <qrcode-stream v-on:decode="onDecode" class="camera-mirror"/>
+            </div>
+            <div v-else class="enter-passphrase">
+                <h3>Enter passphrase</h3>
+                <div  v-if="!recoveredSecret">
+                    <input
+                        type="text"
+                        v-model="passphrase"
+                        v-on:keyup.enter="reconstruct"
+                        autofocus
+                        :disabled="recoveredSecret"
+                    />
+                    <button
+                        type=submit
+                        v-on:click="reconstruct"
+                        v-on:submit="reconstruct"
+                        :disabled="recoveredSecret"
+                    >&#x21b2;</button>
+                </div>
+                <div v-else>
+                <p>✓ Passphrase accepted</p>
+                </div>
+            </div>
+            <div v-if="recoveredSecret">
+                <h3>Recovered secret</h3>
+                <pre class="recovered">{{recoveredSecret}}</pre>
+            </div>
+        </div>
+        <div>
+            <div v-if="!title">
+                <p>Scan first QR-Code to gather set data.</p>
+                <div class="shares">
+                    <ScanMe />
+                    <ScanMe />
+                </div>
+            </div>
+            <div v-if="title && requiredShards && qrCodes">
+                <p><span class="small-text">Name</span><strong>{{title}}</strong></p>
+                <div class="shares">
+                    <qriously v-for="code in qrCodes" :key="code" :value="code" :size="100" />
+                    <ScanMe qriously v-for="n in (missingShards)" :key="n"/>
+                </div>
+                <p v-if="qrCodes.length < requiredShards">
+                    ⚠ To solve the secret {{ missingShards }} more Shard{{ missingShards > 1 ? "s" : ""}} are required.
+                </p>
+                <p class="small-text">
+                    Scanned are {{ qrCodes.length }} of {{totalShards}} previously created Shards.
+                </p>
+                <p v-if="qrCodes.length === requiredShards">
+                    ✓ Got all required shares to recover.
+                </p>
+            </div>
+        </div>
     </div>
-    <div v-else>
-        <input type="text" v-model="passphrase" v-on:keyup.enter="reconstruct" autofocus/>
-        <button v-on:click="reconstruct">&#x21b2;</button>
-    </div>
-    <h2 v-if="recoveredSecret">{{recoveredSecret}}</h2>
 </div>
 </template>
 
@@ -17,6 +64,7 @@
 /*eslint no-console: ["error", { allow: ["warn", "error"] }] */
 
 import crypto from "../util/crypto";
+import ScanMe from "../components/ScanMe";
 
 export default {
     name: 'Combine',
@@ -31,10 +79,22 @@ export default {
             recoveredSecret: undefined
         }
     },
+    components: {
+        ScanMe
+    },
     computed: {
         needMoreShards: function () {
             return (!this.requiredShards) || (this.qrCodes.length < this.requiredShards);
         },
+        totalShards: function () {
+            return (!this.requiredShards) || (this.requiredShards * 2) -1;
+        },
+        missingShards: function () {
+            if (this.requiredShards && this.qrCodes.length) {
+                return this.requiredShards - this.qrCodes.length
+            }
+            return null
+        }
     },
     methods: {
         onDecode: function(result) {
@@ -82,5 +142,42 @@ export default {
 </script>
 
 <style>
-
+.small-text {
+    font-size: small;
+    display: block;
+    color: gray;
+}
+.columns {
+    display: flex;
+    align-items: stretch;
+    max-width: 1024px;
+}
+.columns > div {
+    width: 50%;
+    margin-right: 20px;
+}
+.columns > div >h3:first-child {
+    margin-top: 0;
+}
+.scan-preview {
+    width: 100%;
+    margin: 0 auto;
+}
+.shares {
+    display: flex;
+}
+.shares > div,
+.shares > svg{
+    height: 100px;
+    width: 100px;
+    margin: 0 10px 10px 0;
+}
+.recovered {
+    background: InfoBackground;
+    color: InfoText;
+    padding: 5px 10px;
+}
+.camera-mirror {
+   transform: scaleX(-1);
+}
 </style>

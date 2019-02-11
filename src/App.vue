@@ -1,13 +1,9 @@
 <template>
   <div id="app">
-    <ForkMe url="https://github.com/paritytech/banana_split"/>
-    <GeneralInfo/>
+    <Header />
     <div v-if="secure">
+      <Menu />
       <router-view/>
-      <nav>
-        <router-link to="/share">Share</router-link> |
-        <router-link to="/combine">Combine</router-link>
-      </nav>
     </div>
     <SavePageInfo v-else-if="!localFile"/>
     <GoOfflineInfo v-else-if="isOnline"/>
@@ -15,14 +11,20 @@
 </template>
 
 <script>
-import GeneralInfo from './components/GeneralInfo'
 import GoOfflineInfo from './components/GoOfflineInfo'
 import SavePageInfo from './components/SavePageInfo'
-import ForkMe from './components/ForkMe'
+import Header from './components/Header'
+import Menu from './components/Menu'
+
 
 export default {
   name: 'App',
-  components: {GeneralInfo, GoOfflineInfo, SavePageInfo, ForkMe},
+  components: {
+    Header,
+    Menu,
+    GoOfflineInfo,
+    SavePageInfo,
+  },
   computed: {
     localFile: function() {
       return (window.location.protocol === 'file:');
@@ -41,25 +43,11 @@ export default {
 
 <style>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
   color: #2c3e50;
-}
-
-nav {
-  padding: 30px;
-}
-
-nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-nav a.router-link-exact-active {
-  color: #42b983;
-  text-decoration: none;
+  padding: 20px;
 }
 
 @media print {

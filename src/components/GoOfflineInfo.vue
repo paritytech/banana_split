@@ -1,6 +1,6 @@
 <template>
     <div>
-      <h1>Please go offline, so your secrets won't leak accidentally</h1>
+      <h2>Please go offline</h2>
       <div>
         <p>This application doesn't require Internet access, and you shouldn't be using it from a brower which has one.</p>
         <p>It's really trivial to accidentally upload your unencrypted secrets somewhere, with a help of your browser spellchecker, webpage trnslation extension and such.</p>
@@ -12,8 +12,7 @@
 
 <script>
 export default {
-    name: 'GoOfflineInfo'
-
+  name: 'GoOfflineInfo'
 }
 </script>
 
