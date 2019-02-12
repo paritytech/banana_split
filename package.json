@@ -10,6 +10,7 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
+    "electron": "electron-webpack dev",
     "deploy": "gh-pages -b gh-pages -d dist -a",
     "lint": "vue-cli-service lint",
     "test:unit": "vue-cli-service test:unit"
