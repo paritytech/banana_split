@@ -2,11 +2,40 @@
 <div>
     <div class="columns">
         <div>
+            <div v-if="!title">
+                <p>&#128129; Scan first QR-Code to gather set data.</p>
+                <div class="shares">
+                    <ScanMe />
+                </div>
+            </div>
+            <div v-if="title && requiredShards && qrCodes">
+                <p><span class="small-text">Name</span><strong>{{title}}</strong></p>
+                <div class="shares">
+                    <qriously v-for="code in qrCodes" :key="code" :value="code" :size="100" />
+                    <ScanMe qriously v-for="n in (missingShards)" :key="n"/>
+                </div>
+                <p v-if="qrCodes.length < requiredShards">
+                    ⚠ To solve the secret {{ missingShards }} more Shard{{ missingShards > 1 ? "s" : ""}} are required.
+                </p>
+                <p class="small-text">
+                    Scanned are {{ qrCodes.length }} of {{totalShards}} previously created Shards.
+                </p>
+                <p v-if="qrCodes.length === requiredShards">
+                    ✓ Got all required shares to recover.
+                </p>
+            </div>
+        </div>
+        <div>
             <div v-if="needMoreShards" class="scan-preview" >
                 <div class="scan-preview--loading">
                   Waiting<br/>for<br/>camera
                 </div>
-                <qrcode-stream v-on:decode="onDecode" class="camera-mirror"/>
+                <qrcode-stream
+                    v-on:decode="onDecode"
+                    class="camera"
+                    :camera="{ width: 372, height: 306 }"
+                />
+                <!-- :camera="{ width: 360, height: 300 }" -->
             </div>
             <div v-else class="enter-passphrase">
                 <h3>Enter passphrase</h3>
@@ -34,31 +63,6 @@
                 <pre class="recovered">{{recoveredSecret}}</pre>
             </div>
         </div>
-        <div>
-            <div v-if="!title">
-                <p>Scan first QR-Code to gather set data.</p>
-                <div class="shares">
-                    <ScanMe />
-                    <ScanMe />
-                </div>
-            </div>
-            <div v-if="title && requiredShards && qrCodes">
-                <p><span class="small-text">Name</span><strong>{{title}}</strong></p>
-                <div class="shares">
-                    <qriously v-for="code in qrCodes" :key="code" :value="code" :size="100" />
-                    <ScanMe qriously v-for="n in (missingShards)" :key="n"/>
-                </div>
-                <p v-if="qrCodes.length < requiredShards">
-                    ⚠ To solve the secret {{ missingShards }} more Shard{{ missingShards > 1 ? "s" : ""}} are required.
-                </p>
-                <p class="small-text">
-                    Scanned are {{ qrCodes.length }} of {{totalShards}} previously created Shards.
-                </p>
-                <p v-if="qrCodes.length === requiredShards">
-                    ✓ Got all required shares to recover.
-                </p>
-            </div>
-        </div>
     </div>
 </div>
 </template>
@@ -70,7 +74,7 @@ import crypto from "../../util/crypto";
 import ScanMe from "../ScanMe";
 
 export default {
-    name: 'Combine',
+    name: 'RestoreSecret',
     data: function() {
         return {
             title: "",
@@ -155,16 +159,21 @@ export default {
     align-items: stretch;
     max-width: 1024px;
 }
+.columns > div:first-child {
+    width: 372px;
+    height: 306px;
+    margin-right: 20px;
+}
 .columns > div {
     min-width: 25%;
+    max-width: 50%;
     margin-right: 20px;
 }
 .columns > div >h3:first-child {
     margin-top: 0;
 }
 .scan-preview {
-    width: 20em;
-    margin: 0 auto;
+    width: 100%;
     position: relative;
 }
 .scan-preview--loading {
@@ -189,7 +198,10 @@ export default {
     color: InfoText;
     padding: 5px 10px;
 }
-.camera-mirror {
+.camera {
    transform: scaleX(-1);
+    max-width: 100%;
+    height: auto;
+
 }
 </style>

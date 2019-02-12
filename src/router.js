@@ -1,9 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
-import Info from './components/views/Info'
-import Share from './components/views/Share'
-import Combine from './components/views/Combine'
+import Welcome from './components/views/Welcome'
+import SplitSecret from './components/views/SplitSecret'
+import RestoreSecret from './components/views/RestoreSecret'
 
 Vue.use(Router)
 
@@ -12,17 +12,17 @@ export default new Router({
     {
       path: '/',
       name: 'info',
-      component: Info
+      component: Welcome
     },
     {
-      path: '/share',
-      name: 'share',
-      component: Share
+      path: '/split',
+      name: 'splitSecret',
+      component: SplitSecret
     },
     {
-      path: '/combine',
-      name: 'combine',
-      component: Combine
+      path: '/restore',
+      name: 'restoreSecret',
+      component: RestoreSecret
     }
   ]
 })

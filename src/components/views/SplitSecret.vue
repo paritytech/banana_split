@@ -1,7 +1,6 @@
 <template>
 <div>
     <form id="share-controls" @submit.prevent="toggleMode">
-        <h2>Split secrets</h2>
         <div>Carve your secrets into shards.</div>
         <p>
             <label for="name">Name</label>
@@ -82,7 +81,7 @@ import ShardInfo from '../ShardInfo';
 import CanvasText from '../CanvasText';
 
 export default {
-    name: 'Share',
+    name: 'SplitSecret',
     data: function () {
         return {
             title: '',

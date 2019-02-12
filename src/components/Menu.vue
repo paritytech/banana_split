@@ -1,8 +1,8 @@
 <template>
   <nav>
     <router-link to="/">Get started</router-link>
-    <router-link to="/share">Share</router-link>
-    <router-link to="/combine">Combine</router-link>
+    <router-link to="/split">Split secret</router-link>
+    <router-link to="/restore">Restore</router-link>
   </nav>
 </template>
 
@@ -17,14 +17,14 @@
 
 <style>
   nav {
-    margin: 30px 0;
+    margin: 20px 0;
   }
 
   nav a {
     color: ButtonText;
     background: ButtonHighlight;
     text-decoration: none;
-    display: inline-block;
+    display: table-cell;
     padding: .2em .7em;
     border: 1px solid ActiveBorder;
   }
