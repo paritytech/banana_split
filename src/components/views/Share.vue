@@ -66,10 +66,10 @@
         </div>
     </form>
 
-    <!--<div id="qr-tiles">-->
-        <!--<shard-info v-for="shard in shards" v-bind:key="shard" v-bind:shard="shard" v-bind:requiredShards="requiredShards"-->
-            <!--v-bind:title="title" />-->
-    <!--</div>-->
+    <div id="qr-tiles">
+        <shard-info v-for="shard in shards" v-bind:key="shard" v-bind:shard="shard" v-bind:requiredShards="requiredShards"
+            v-bind:title="title" />
+    </div>
 </div>
 </template>
 
@@ -127,16 +127,12 @@ export default {
     flex-wrap: wrap;
     justify-content: space-evenly;
 }
+#qr-tiles .screen-only {
+    display: none;
+}
 label {
     font-size: small;
     color: gray;
     display: block;
-}
-@media screen {
-    #qr-tiles {
-        width: calc(70%);
-        margin-left: calc(15%);
-        flex-direction: row;
-    }
 }
 </style>
