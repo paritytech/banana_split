@@ -50,3 +50,17 @@ test('works with unicode strings', () => {
     expect(reconstructed).toBe('Текст сообщения');
 })
 
+test('reconstructs the reference example', () => {
+    var shards = [
+        {"t":"Very secret info","r":2,"d":"803c12929ba469d720a63fc8ca6f6ef1cc441f8f0b830ea04f8a484169ec800e4a7","n":"29abbb2c509adedb470f6d3fd3d083362b8c1a9283adf987"},
+        {"t":"Very secret info","r":2,"d":"801b4196813bb664141169f939414fec30c7f343326d8df45e557b25b0249fd43e2","n":"29abbb2c509adedb470f6d3fd3d083362b8c1a9283adf987"},
+        {"t":"Very secret info","r":2,"d":"80275318760b66ee5a1d7430dbf8769fda05e9e1ff7447eaa78539fbed006f0390b","n":"29abbb2c509adedb470f6d3fd3d083362b8c1a9283adf987"}
+    ];
+
+    [
+        [0, 1], [0, 2], [1, 2],
+        [1, 0], [2, 0], [2, 1]
+    ].forEach(([i,j]) => {
+        expect(crypto.reconstruct([shards[i].d, shards[j].d], 'Very secret info', 'amazing-daring-panda-horror', shards[i].n)).toBe('Any questions?')
+    });
+})
