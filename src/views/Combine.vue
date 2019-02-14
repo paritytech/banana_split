@@ -68,9 +68,7 @@ export default {
             if (!this.passphrase) { return; }
             this.passphrase = this.passphrase.split(" ").filter(el => el).join('-');
             var shards = Array.from(this.shards);
-            var nonce = shards[0].nonce;
-            var dataShards = shards.map((shard) => shard.data)
-            this.recoveredSecret = crypto.reconstruct(dataShards, this.title, this.passphrase, nonce);
+            this.recoveredSecret = crypto.reconstruct(shards, this.passphrase);
         }
     },
     mounted: function() {
