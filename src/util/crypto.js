@@ -79,11 +79,31 @@ function parse(payload) {
     }
 }
 
-function reconstruct(shards, title, passphrase, encodedNonce) {
-    var encryptedSecret = SECRETS.combine(shards);
+function reconstruct(shardObjects, passphrase) {
+    var shardData = shardObjects.map(shard => shard.data);
+
+    var shardsRequirements = shardObjects.map(shard => shard.requiredShards);
+    if (!shardsRequirements.every(r => r===shardsRequirements[0])) {
+        throw "Mismatching min shards requirement among shards!"
+    }
+    if (shardObjects.length < shardsRequirements[0]) {
+        throw `Not enough shards, need ${shardsRequirements[0]} but only ${shardObjects.length} provided`
+    }
+
+    var nonces = shardObjects.map(shard => shard.nonce);
+    if (!nonces.every(n => n===nonces[0])) {
+        throw "Nonces mismatch among shards!"
+    }
+
+    var titles = shardObjects.map((shard) => shard.title);
+    if (!titles.every(t => t===titles[0])) {
+        throw "Titles mismatch among shards!"
+    }
+
+    var encryptedSecret = SECRETS.combine(shardData);
     var secret = dehexify(encryptedSecret);
-    var nonce = dehexify(encodedNonce);
-    var salt = hashString(title);
+    var nonce = dehexify(nonces[0]);
+    var salt = hashString(titles[0]);
     return uint8ArrayToStr(decrypt(secret, salt, passphrase, nonce));
 }
 
