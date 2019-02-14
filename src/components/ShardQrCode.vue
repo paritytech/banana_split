@@ -41,16 +41,20 @@ export default {
     .print-only {
         display: none;
     }
+
+    .qr-tile {
+        display: inline-block;
+    }
 }
 
 @media print {
     .screen-only {
        display: none;
    }
-}
 
-.qr-tile {
-    page-break-after: always;
+    .qr-tile {
+        page-break-after: always;
+    }
 }
 
 .recovery-field {
