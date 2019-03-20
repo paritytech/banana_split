@@ -1,4 +1,4 @@
-import {app, BrowserWindow} from 'electron'
+import {app, BrowserWindow, BrowserView} from 'electron'
 import path from 'path'
 import { format as formatUrl } from 'url'
 
@@ -10,11 +10,38 @@ import { format as formatUrl } from 'url'
 */
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
+const nodeConsole = require('console');
+const myConsole = new nodeConsole.Console(process.stdout, process.stderr);
+
+// var ses = session.fromPartition('persist:name');
+
+myConsole.log(BrowserWindow, 'defaultSession')
+
+
 app.on('ready', () => {
   let window = new BrowserWindow({
     // width: 800,
     // height: 600
   });
+
+  try {
+    window.webContents.debugger.attach('1.1')
+  } catch (err) {
+    myConsole.log('Debugger attach failed : ', err)
+  }
+  window.webContents.debugger.sendCommand('Network.enable', false)
+
+  // let view = new BrowserView({
+  //   webPreferences: {
+  //     nodeIntegration: false
+  //   }
+  // })
+  // window.setBrowserView(view)
+
+  // session.enableNetworkEmulation({offline: true})
+
+  // BrowserWindow.enableNetworkEmulation({options: {offline: true}})
+
   if (isDevelopment) {
     window.loadURL(`http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}`)
   }
@@ -24,5 +51,27 @@ app.on('ready', () => {
       protocol: 'file',
       slashes: true
     }))
+    // Make Chrome run in Offline mode within Electron.
+    window.webContents.debugger.sendCommand('Network.emulateNetworkConditions', {
+      offline: true,
+      latency: 1000000.0,
+      downloadThroughput: 0.0,
+      uploadThroughput: 0.0
+    }, myConsole.log)
   }
+
+  window.webContents.on('new-window', function(e, url) {
+    e.preventDefault();
+    BrowserWindow.shell.openExternal(url);
+  });
+
+  window.on("closed", () => {
+    window = null;
+  })
+
+  app.on("window-all-closed", () => {
+    if (process.platform !== "darwin") {
+      app.quit();
+    }
+  })
 })

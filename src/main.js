@@ -14,11 +14,25 @@ Vue.use(OnlinePlugin)
 
 Vue.config.productionTip = false
 
-// Vue.prototype.BULD_TARGET = process.env.npm_lifecycle_event && process.env.npm_lifecycle_event.includes('electron') ? 'electron' : 'browser'
+Vue.prototype.BULD_TARGET = process.config.variables.built_with_electron ? 'electron' : 'browser'
+
+// To use console log in Build
+// Run App like:
+// npm run electron-build && dist/mac/banana_split.app/Contents/MacOS/banana_split
+//
+// Then the folowing will work:
+// const nodeConsole = require('console');
+// const myConsole = new nodeConsole.Console(process.stdout, process.stderr);
+// myConsole.log(Vue.prototype.BULD_TARGET, 'built_with_electron');
+//
+// END: Console log in Build
+
+
 
 Vue.prototype.$eventHub = new Vue()
 
 new Vue({
   router,
-  render: function (h) { return h(App) }
+  render: function (h) {
+    return h(App) }
 }).$mount('#app')
