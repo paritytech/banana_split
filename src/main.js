@@ -14,6 +14,8 @@ Vue.use(OnlinePlugin)
 
 Vue.config.productionTip = false
 
+// Vue.prototype.BULD_TARGET = process.env.npm_lifecycle_event && process.env.npm_lifecycle_event.includes('electron') ? 'electron' : 'browser'
+
 Vue.prototype.$eventHub = new Vue()
 
 new Vue({
