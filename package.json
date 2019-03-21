@@ -10,9 +10,11 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
+    "dev": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "electron": "electron-webpack dev",
     "electron-build": "electron-webpack && electron-builder",
+    "electron-build-osx": "electron-webpack && electron-builder && dist/mac/banana_split.app/Contents/MacOS/banana_split",
     "deploy": "gh-pages -b gh-pages -d dist -a",
     "lint": "vue-cli-service lint",
     "test:unit": "vue-cli-service test:unit"
@@ -24,14 +26,16 @@
     }
   },
   "dependencies": {
+    "console": "^0.7.2",
     "scryptsy": "^2.0.0",
     "secrets.js-grempe": "^1.1.0",
+    "source-map-support": "^0.5.11",
     "tweetnacl": "^1.0.1",
     "vue": "^2.6.10",
+    "vue-easy-slider": "^5.2.7",
     "vue-qrcode-reader": "^1.4.0",
     "vue-qriously": "^1.1.1",
-    "vue-router": "^3.0.1",
-    "source-map-support": "^0.5.11"
+    "vue-router": "^3.0.1"
   },
   "devDependencies": {
     "@vue/cli-plugin-eslint": "^3.5.1",

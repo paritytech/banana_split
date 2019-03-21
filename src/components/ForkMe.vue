@@ -1,6 +1,6 @@
 <template>
     <span id="forkongithub">
-        <a v-bind:href="url">🥄Fork me on GitHub</a>
+        <a v-bind:href="url" target="_blank">🥄Fork me on GitHub</a>
     </span>
 </template>
 
