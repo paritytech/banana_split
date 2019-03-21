@@ -3,7 +3,7 @@
     <h1>Banana Split</h1>
     <div class="slogan">Make paper backups more resilient and secure</div>
     <ForkMe
-        v-if="BULD_TARGET !== 'electron'"
+        v-if="!IS_ELECTRON_BUILD"
         url="https://github.com/paritytech/banana_split"/>
   </header>
 </template>

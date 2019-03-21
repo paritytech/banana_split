@@ -1,4 +1,4 @@
-import {app, BrowserWindow, BrowserView} from 'electron'
+import {app, shell, BrowserWindow} from 'electron'
 import path from 'path'
 import { format as formatUrl } from 'url'
 
@@ -52,6 +52,7 @@ app.on('ready', () => {
       slashes: true
     }))
     // Make Chrome run in Offline mode within Electron.
+    // https://electronjs.org/docs/api/debugger
     window.webContents.debugger.sendCommand('Network.emulateNetworkConditions', {
       offline: true,
       latency: 1000000.0,
@@ -60,10 +61,11 @@ app.on('ready', () => {
     }, myConsole.log)
   }
 
-  window.webContents.on('new-window', function(e, url) {
-    e.preventDefault();
-    BrowserWindow.shell.openExternal(url);
+  window.webContents.on('new-window', function(event, url){
+    shell.openExternal(url);
+    event.preventDefault();
   });
+
 
   window.on("closed", () => {
     window = null;

@@ -14,16 +14,18 @@ Vue.use(OnlinePlugin)
 
 Vue.config.productionTip = false
 
-Vue.prototype.BULD_TARGET = process.config.variables.built_with_electron ? 'electron' : 'browser'
+Vue.prototype.IS_ELECTRON_BUILD = (process.env.npm_lifecycle_event && process.env.npm_lifecycle_event.includes('electron'))
+                            || (process.config && process.config.variables.built_with_electron);
 
-// To use console log in Build
+// To use console log in ELECTRON BUILD
 // Run App like:
 // npm run electron-build && dist/mac/banana_split.app/Contents/MacOS/banana_split
 //
-// Then the folowing will work:
+// Following will work only in Electron build not in npm development:
 // const nodeConsole = require('console');
 // const myConsole = new nodeConsole.Console(process.stdout, process.stderr);
-// myConsole.log(Vue.prototype.BULD_TARGET, 'built_with_electron');
+// myConsole.log(Vue.prototype.IS_ELECTRON, 'IS ELECTRON');
+// myConsole.log(Vue.prototype.BULD_TARGET, 'IS BROWSER');
 //
 // END: Console log in Build
 
