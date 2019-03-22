@@ -20,8 +20,8 @@ myConsole.log(BrowserWindow, 'defaultSession')
 
 app.on('ready', () => {
   let window = new BrowserWindow({
-    // width: 800,
-    // height: 600
+    width: 760,
+    height: 600
   });
 
   try {
@@ -61,6 +61,7 @@ app.on('ready', () => {
     }, myConsole.log)
   }
 
+  // Open external urls (target="_blank") in OS browser.
   window.webContents.on('new-window', function(event, url){
     shell.openExternal(url);
     event.preventDefault();

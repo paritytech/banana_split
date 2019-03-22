@@ -6,7 +6,7 @@
             <h4>Please go to <a href="https://bs.parity.io">https://bs.parity.io</a> to download the reconstruction webapp, if you don't have one already</h4>
         </div>
         <qriously class="print-only" v-bind:value="shard" v-bind:size="600" />
-        <qriously class="screen-only" v-bind:value="shard" v-bind:size="200" />
+        <qriously v-if="!IS_ELECTRON_BUILD" class="screen-only" v-bind:value="shard" v-bind:size="200" />
         <div class="print-only">
             <div class="recovery-field">
                 <div class="recovery-title">Recovery&nbsp;passphrase&nbsp;is&nbsp;</div>
