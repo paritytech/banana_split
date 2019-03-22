@@ -2,8 +2,13 @@
 <div>
     <h1>Combine shards<span v-if="title"> for {{title}}</span></h1>
     <div v-if="needMoreShards">
-    <qrcode-stream v-on:decode="onDecode"/>
-    <qriously v-for="code in qrCodes" v-bind:key="code" v-bind:value="code" v-bind:size="200" />
+        <qrcode-stream v-on:decode="onDecode"/>
+        <div class="codes-row">
+            <qriously class="qrcode" v-for="code in qrCodes" v-bind:key="code" v-bind:value="code"
+                v-bind:size="200" v-bind:padding="10" />
+            <qriously class="qrcode remaining" v-for="n in remainingCodes" v-bind:key="n" value='{"t":"Very secret info","r":2,"d":"803c12929ba469d720a63fc8ca6f6ef1cc441f8f0b830ea04f8a484169ec800e4a7","n":"29abbb2c509adedb470f6d3fd3d083362b8c1a9283adf987"}'
+                v-bind:size="180" foreground="#aaa" v-bind:padding="15" />
+        </div>
     </div>
     <div v-else>
         <input type="text" v-model="passphrase" v-on:keyup.enter="reconstruct" autofocus/>
@@ -35,6 +40,14 @@ export default {
         needMoreShards: function () {
             return (!this.requiredShards) || (this.qrCodes.length < this.requiredShards);
         },
+        remainingCodes: function () {
+            if (!this.requiredShards) {
+                return 0;
+            } else {
+                return this.requiredShards - this.qrCodes.length;
+            }
+
+        }
     },
     methods: {
         onDecode: function(result) {
@@ -67,12 +80,17 @@ export default {
         reconstruct: function() {
             if (!this.passphrase) { return; }
             this.passphrase = this.passphrase.split(" ").filter(el => el).join('-');
-            this.recoveredSecret = crypto.reconstruct(
-                Array.from(this.shards).map(a => a.data),
-                Array.from(this.shards).pop().title,
-                this.passphrase,
-                Array.from(this.shards).pop().nonce
-            );
+// <<<<<<< HEAD
+//             this.recoveredSecret = crypto.reconstruct(
+//                 Array.from(this.shards).map(a => a.data),
+//                 Array.from(this.shards).pop().title,
+//                 this.passphrase,
+//                 Array.from(this.shards).pop().nonce
+//             );
+// =======
+        var shards = Array.from(this.shards);
+        this.recoveredSecret = crypto.reconstruct(shards, this.passphrase);
+// >>>>>>> 862a12be3635f386f9439107f2f9367d383fdfc6
         }
     },
     mounted: function() {
@@ -82,5 +100,15 @@ export default {
 </script>
 
 <style>
+.qrcode {
+    display: inline-block;
+}
 
+.qrcode.remaining {
+    -webkit-filter: blur(6px);
+    -moz-filter: blur(6px);
+    -o-filter: blur(6px);
+    -ms-filter: blur(6px);
+    filter: blur(6px);
+}
 </style>
