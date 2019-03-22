@@ -30,10 +30,10 @@
     "scryptsy": "^2.0.0",
     "secrets.js-grempe": "^1.1.0",
     "source-map-support": "^0.5.11",
-    "tweetnacl": "^1.0.1",
     "vue": "^2.6.10",
     "vue-easy-slider": "^5.2.7",
     "vue-qrcode-reader": "^1.4.0",
+    "tweetnacl": "^1.0.1",
     "vue-qriously": "^1.1.1",
     "vue-router": "^3.0.1"
   },
