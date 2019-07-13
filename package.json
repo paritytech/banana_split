@@ -5,10 +5,8 @@
   "contributors": [
     "Kirill Pimenov <kirill@parity.io>"
   ],
-
   "version": "0.1.0",
   "private": true,
-
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
@@ -17,6 +15,7 @@
     "test:unit": "vue-cli-service test:unit"
   },
   "dependencies": {
+    "base64-js": "^1.3.0",
     "scryptsy": "^2.0.0",
     "secrets.js-grempe": "^1.1.0",
     "tweetnacl": "^1.0.0",
