@@ -59,11 +59,14 @@ function share(data, title, passphrase, totalShards, requiredShards) {
     var nonce = BASE64.fromByteArray(encrypted.nonce);
     var hexEncrypted = hexify(encrypted.value);
     return SECRETS.share(hexEncrypted, totalShards, requiredShards).map(function (shard) {
+        // First char is non-hex (base36) and signifies the bitfield size of our share
+        var encodedShard = shard[0] + BASE64.fromByteArray(dehexify(shard.slice(1)));
+
         return JSON.stringify({
             v: 1,
             t: title,
             r: requiredShards,
-            d: BASE64.fromByteArray(dehexify(shard)),
+            d: encodedShard,
             n: nonce
         }).replace(/[\u007F-\uFFFF]/g, function (chr) {
             return "\\u" + ("0000" + chr.charCodeAt(0).toString(16)).substr(-4)
@@ -116,7 +119,7 @@ function reconstruct(shardObjects, passphrase) {
             return uint8ArrayToStr(decrypt(secret, salt, passphrase, nonce));
 
         case 1:
-            var shardDataV1 = shardObjects.map(shard => hexify(BASE64.toByteArray(shard.data)));
+            var shardDataV1 = shardObjects.map(shard => shard.data[0]+hexify(BASE64.toByteArray(shard.data.slice(1))));
             var encryptedSecretV1 = SECRETS.combine(shardDataV1);
             var secretV1 = dehexify(encryptedSecretV1);
             var nonceV1 = BASE64.toByteArray(nonces[0]);
