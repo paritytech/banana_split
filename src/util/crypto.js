@@ -1,8 +1,28 @@
-const BASE64 = require("base64-js");
 const CRYPTO = require("tweetnacl");
 const SCRYPT = require("scryptsy");
 
 const SECRETS = require('secrets.js-grempe');
+
+const PROTOBUF = require("protobufjs/light");
+
+const ShardMessage = function(){
+    var root = new PROTOBUF.Root().define("bananasplitv1");
+    var ShardData = new PROTOBUF.Type("ShardData")
+        .add(new PROTOBUF.Field("bits", 1, "uint32"))
+        .add(new PROTOBUF.Field("id", 2, "uint32"))
+        .add(new PROTOBUF.Field("data", 3, "bytes"));
+    root.add(ShardData);
+
+    var ShardMessage = new PROTOBUF.Type("ShardMessage")
+        .add(new PROTOBUF.Field("version", 1, "uint32"))
+        .add(new PROTOBUF.Field("title", 2, "string"))
+        .add(new PROTOBUF.Field("requiredShards", 3, "uint32"))
+        .add(new PROTOBUF.Field("nonce", 4, "bytes"))
+        .add(new PROTOBUF.Field("data", 5, "ShardData"));
+    root.add(ShardMessage);
+
+    return root.resolveAll().lookupType("bananasplitv1.ShardMessage")
+}();
 
 const HexEncodeArray = [
     '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f',
@@ -56,36 +76,37 @@ function decrypt(data, salt, passphrase, nonce) {
 function share(data, title, passphrase, totalShards, requiredShards) {
     var salt = hashString(title);
     var encrypted = encrypt(data, salt, passphrase);
-    var nonce = BASE64.fromByteArray(encrypted.nonce);
-    var hexEncrypted = hexify(encrypted.value);
-    return SECRETS.share(hexEncrypted, totalShards, requiredShards).map(function (shard) {
-        // First char is non-hex (base36) and signifies the bitfield size of our share
-        var encodedShard = shard[0] + BASE64.fromByteArray(dehexify(shard.slice(1)));
+    return SECRETS.share(hexify(encrypted.value), totalShards, requiredShards).map(function (hexShard) {
+        var shard = SECRETS.extractShareComponents(hexShard);
+        shard.data = dehexify(shard.data);
 
-        return JSON.stringify({
-            v: 1,
-            t: title,
-            r: requiredShards,
-            d: encodedShard,
-            n: nonce
-        }).replace(/[\u007F-\uFFFF]/g, function (chr) {
-            return "\\u" + ("0000" + chr.charCodeAt(0).toString(16)).substr(-4)
-        });
+        var shardMessage = ShardMessage.create({ version: 1, title, requiredShards, nonce: encrypted.nonce, data: shard });
+        return ShardMessage.encode(shardMessage).finish();
     });
 }
 
 function parse(payload) {
-    let parsed = JSON.parse(payload);
-    return {
-        version: parsed.v || 0, // 'undefined' version is treated as 0
-        title: parsed.t,
-        requiredShards: parsed.r,
-        data: parsed.d,
-        nonce: parsed.n
+    if (payload[0] === '{') { // Old version was using JSON encoding, this is a naïve check for JSON
+        let parsed = JSON.parse(payload);
+        return {
+            version: 0,
+            title: parsed.t,
+            requiredShards: parsed.r,
+            data: parsed.d,
+            nonce: parsed.n
+        }
+    } else {
+        return ShardMessage.decode(payload);
     }
 }
 
 function reconstruct(shardObjects, passphrase) {
+    // compare TypedArrays
+    function typedArraysAreEqual(a, b) {
+        if (a.byteLength !== b.byteLength) return false;
+        return a.every((val, i) => val === b[i]);
+    }
+
     var shardsRequirements = shardObjects.map(shard => shard.requiredShards);
     if (!shardsRequirements.every(r => r===shardsRequirements[0])) {
         throw "Mismatching min shards requirement among shards!"
@@ -95,7 +116,7 @@ function reconstruct(shardObjects, passphrase) {
     }
 
     var nonces = shardObjects.map(shard => shard.nonce);
-    if (!nonces.every(n => n===nonces[0])) {
+    if (!nonces.every(n => n===nonces[0] || typedArraysAreEqual(n, nonces[0]))) {
         throw "Nonces mismatch among shards!"
     }
 
@@ -119,10 +140,24 @@ function reconstruct(shardObjects, passphrase) {
             return uint8ArrayToStr(decrypt(secret, salt, passphrase, nonce));
 
         case 1:
-            var shardDataV1 = shardObjects.map(shard => shard.data[0]+hexify(BASE64.toByteArray(shard.data.slice(1))));
+            var shardDataV1 = shardObjects.map(shard => {
+                // Directly extracted from secrets.js code because it's stupid and cannot consume raw buffers
+
+                function padLeft(str, multipleOfBits) {
+                    var missing = str.length % multipleOfBits;
+                    return (new Array(1024).join("0") + str).slice(-(multipleOfBits - missing + str.length));
+                }
+
+                var bitsBase36 = shard.data.bits.toString(36).toUpperCase();
+                var idMax = Math.pow(2, shard.data.bits) - 1;
+                var idPaddingLen = idMax.toString(16).length;
+                var idHex = padLeft(shard.data.id.toString(16), idPaddingLen);
+
+                return bitsBase36 + idHex + hexify(shard.data.data)
+            });
             var encryptedSecretV1 = SECRETS.combine(shardDataV1);
             var secretV1 = dehexify(encryptedSecretV1);
-            var nonceV1 = BASE64.toByteArray(nonces[0]);
+            var nonceV1 = nonces[0];
             var saltV1 = hashString(titles[0]);
             return uint8ArrayToStr(decrypt(secretV1, saltV1, passphrase, nonceV1));
 

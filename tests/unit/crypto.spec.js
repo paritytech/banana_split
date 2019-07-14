@@ -15,7 +15,7 @@ test('properly deserializes metadata', () => {
     parsed.forEach(message => {
         expect(message.title).toBe('Secret title');
         expect(message.requiredShards).toBe(3);
-        expect(message.nonce).toBe(parsed[0].nonce);
+        expect(message.nonce).toEqual(parsed[0].nonce);
     });
 })
 
