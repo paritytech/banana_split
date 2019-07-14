@@ -15,7 +15,7 @@
     "test:unit": "vue-cli-service test:unit"
   },
   "dependencies": {
-    "base64-js": "^1.3.0",
+    "protobufjs": "~6.8.8",
     "scryptsy": "^2.0.0",
     "secrets.js-grempe": "^1.1.0",
     "tweetnacl": "^1.0.0",
