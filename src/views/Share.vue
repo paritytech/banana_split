@@ -3,10 +3,11 @@
     <div id="share-controls">
         <h1>Share secrets</h1>
         <p>What is this thing? <input type="text" :disabled="encryptionMode" v-model="title" placeholder="Like, 'Bitcoin seed phrase'" autofocus/></p>
-        <textarea v-model="secret" :disabled="encryptionMode" placeholder="Your secret goes here"></textarea>
+        <textarea v-model="secret" v-bind:class="{tooLong: secretTooLong}" :disabled="encryptionMode" placeholder="Your secret goes here"></textarea>
+        <div v-if="this.secretTooLong">Inputs longer than 1024 characters make QR codes illegible</div>
         <p>Will require any {{requiredShards}} shards out of <input type="number" v-model.number="totalShards" min="3" />
             to reconstruct</p>
-        <button v-on:click="toggleMode">
+        <button :disabled="secretTooLong" v-on:click="toggleMode">
             <span v-if="this.encryptionMode">Back to editing data</span>
             <span v-else>Generate QR codes!</span>
         </button>
@@ -42,11 +43,14 @@ export default {
             secret: '',
             totalShards: 3, // TODO: 5
             recoveryPassphrase: bipPhrase.generate(4),
-            encryptionMode: false,
+            encryptionMode: false
         }
     },
     components: { ShardInfo, CanvasText },
     computed: {
+        secretTooLong: function() {
+            return this.secret.length > 1024;
+        },
         requiredShards: function () {
             return Math.floor(this.totalShards / 2) + 1;
         },
@@ -75,6 +79,10 @@ export default {
 </script>
 
 <style>
+textarea.tooLong {
+    border: 5px solid red;
+}
+
 #qr-tiles {
     display: flex;
     flex-wrap: wrap;

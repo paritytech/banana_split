@@ -1,3 +1,4 @@
+const BASE64 = require("base64-js");
 const CRYPTO = require("tweetnacl");
 const SCRYPT = require("scryptsy");
 
@@ -55,13 +56,17 @@ function decrypt(data, salt, passphrase, nonce) {
 function share(data, title, passphrase, totalShards, requiredShards) {
     var salt = hashString(title);
     var encrypted = encrypt(data, salt, passphrase);
-    var nonce = hexify(encrypted.nonce);
+    var nonce = BASE64.fromByteArray(encrypted.nonce);
     var hexEncrypted = hexify(encrypted.value);
     return SECRETS.share(hexEncrypted, totalShards, requiredShards).map(function (shard) {
+        // First char is non-hex (base36) and signifies the bitfield size of our share
+        var encodedShard = shard[0] + BASE64.fromByteArray(dehexify(shard.slice(1)));
+
         return JSON.stringify({
+            v: 1,
             t: title,
             r: requiredShards,
-            d: shard,
+            d: encodedShard,
             n: nonce
         }).replace(/[\u007F-\uFFFF]/g, function (chr) {
             return "\\u" + ("0000" + chr.charCodeAt(0).toString(16)).substr(-4)
@@ -72,6 +77,7 @@ function share(data, title, passphrase, totalShards, requiredShards) {
 function parse(payload) {
     let parsed = JSON.parse(payload);
     return {
+        version: parsed.v || 0, // 'undefined' version is treated as 0
         title: parsed.t,
         requiredShards: parsed.r,
         data: parsed.d,
@@ -80,8 +86,6 @@ function parse(payload) {
 }
 
 function reconstruct(shardObjects, passphrase) {
-    var shardData = shardObjects.map(shard => shard.data);
-
     var shardsRequirements = shardObjects.map(shard => shard.requiredShards);
     if (!shardsRequirements.every(r => r===shardsRequirements[0])) {
         throw "Mismatching min shards requirement among shards!"
@@ -100,11 +104,31 @@ function reconstruct(shardObjects, passphrase) {
         throw "Titles mismatch among shards!"
     }
 
-    var encryptedSecret = SECRETS.combine(shardData);
-    var secret = dehexify(encryptedSecret);
-    var nonce = dehexify(nonces[0]);
-    var salt = hashString(titles[0]);
-    return uint8ArrayToStr(decrypt(secret, salt, passphrase, nonce));
+    var versions = shardObjects.map(shard => shard.version);
+    if  (!versions.every(v => v===versions[0])) {
+        throw "Versions mismatch along shards!"
+    }
+
+    switch (versions[0]) {
+        case 0:
+            var shardData = shardObjects.map(shard => shard.data);
+            var encryptedSecret = SECRETS.combine(shardData);
+            var secret = dehexify(encryptedSecret);
+            var nonce = dehexify(nonces[0]);
+            var salt = hashString(titles[0]);
+            return uint8ArrayToStr(decrypt(secret, salt, passphrase, nonce));
+
+        case 1:
+            var shardDataV1 = shardObjects.map(shard => shard.data[0]+hexify(BASE64.toByteArray(shard.data.slice(1))));
+            var encryptedSecretV1 = SECRETS.combine(shardDataV1);
+            var secretV1 = dehexify(encryptedSecretV1);
+            var nonceV1 = BASE64.toByteArray(nonces[0]);
+            var saltV1 = hashString(titles[0]);
+            return uint8ArrayToStr(decrypt(secretV1, saltV1, passphrase, nonceV1));
+
+        default:
+            throw "Version is not supported!";
+    }
 }
 
 export default {
