@@ -5,7 +5,7 @@
             <h3>You need {{requiredShards - 1}} more QR {{pluralizeCode}} like this to reconstruct the secret</h3>
             <h4>Please go to <a href="https://bs.parity.io">https://bs.parity.io</a> to download the reconstruction webapp, if you don't have one already</h4>
         </div>
-        <qriously class="print-only" v-bind:value="shard" v-bind:size="600" />
+        <qriously class="print-only" v-bind:value="shard" v-bind:size="750" />
         <qriously class="screen-only" v-bind:value="shard" v-bind:size="200" />
         <div class="print-only">
             <div class="recovery-field">
