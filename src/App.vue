@@ -11,7 +11,7 @@
     </div>
     <SavePageInfo v-else-if="!localFile"/>
     <GoOfflineInfo v-else-if="isOnline"/>
-    <p class="version-footer">BananaSplit version {{version}}</p>
+    <p class="version-footer">BananaSplit version {{version}}, git revision {{gitRevision}}</p>
   </div>
 </template>
 
@@ -39,6 +39,9 @@ export default {
     },
     version: function() {
       return version
+    },
+    gitRevision: function() {
+      return process.env.GIT_REVISION;
     }
   }
 }
