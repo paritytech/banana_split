@@ -5,7 +5,7 @@
   "contributors": [
     "Kirill Pimenov <kirill@parity.io>"
   ],
-  "version": "0.2.0-pre",
+  "version": "0.2.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
