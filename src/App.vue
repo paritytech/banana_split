@@ -11,6 +11,7 @@
     </div>
     <SavePageInfo v-else-if="!localFile"/>
     <GoOfflineInfo v-else-if="isOnline"/>
+    <p class="version-footer">BananaSplit version {{version}}</p>
   </div>
 </template>
 
@@ -20,12 +21,14 @@ import GoOfflineInfo from './components/GoOfflineInfo'
 import SavePageInfo from './components/SavePageInfo'
 import ForkMe from './components/ForkMe'
 
+import {version} from '../package.json';
+
 export default {
   name: 'App',
   components: {GeneralInfo, GoOfflineInfo, SavePageInfo, ForkMe},
   computed: {
     localFile: function() {
-      return (window.location.protocol === 'file:');
+      return (window.location.protocol === 'file:')
     },
     secure: function() {
       if (process.env.NODE_ENV === 'production') {
@@ -33,6 +36,9 @@ export default {
       } else {
         return true
       }
+    },
+    version: function() {
+      return version
     }
   }
 }
@@ -66,5 +72,11 @@ nav a.router-link-exact-active {
   #app {
      display: none;
   }
+}
+
+.version-footer {
+  font-size: 80%;
+  font-style: italic;
+  color: darkgray;
 }
 </style>
