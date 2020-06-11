@@ -76,9 +76,9 @@ export default {
 
 .qr-tile {
   font-family: "Avenir Next Condensed", "Avenir", Helvetica, Arial, sans-serif;
-  margin: 0.5cm;
+  margin: 0.1cm;
   padding: 0.5cm;
-  border: dashed 2px;
+  border: dotted 1px rgba(0, 0, 0, 0.25);
   text-align: center;
 }
 
