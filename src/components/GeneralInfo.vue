@@ -1,6 +1,6 @@
 <template>
   <div class="fold">
-    <h1>🍌🍨 Banana split 🍨🍌</h1>
+    <h1 class="main-title">Banana split</h1>
     <input id="fold-header" type="checkbox" name="fold" v-model="unfolded" />
     <label for="fold-header">
       <h2 v-if="unfolded">Shamir Secret Sharing for people with friends</h2>
@@ -56,6 +56,15 @@ export default {
 </script>
 
 <style>
+.main-title::before,
+.main-title::after {
+  display: inline-block;
+  padding: 0 20px;
+  content: "\1F34C\1F368";
+}
+.main-title::after {
+  transform: scaleX(-1);
+}
 .fold {
   position: relative;
   overflow: hidden;

@@ -99,6 +99,8 @@ h4 {
 .recovery-field {
   width: 100%;
   display: flex;
+  margin-top: 2em;
+  text-transform: uppercase;
 }
 
 .recovery-blank {

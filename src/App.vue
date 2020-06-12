@@ -64,6 +64,10 @@ body {
   padding: 0 0 200px 0;
 }
 
+p {
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
+}
+
 nav {
   padding: 20px;
   background: linear-gradient(rgba(235, 232, 226, 0), #ebe8e3);
