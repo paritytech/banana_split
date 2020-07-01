@@ -147,6 +147,11 @@ textarea:disabled {
   color: #99928f;
 }
 
+input[type="number"] {
+  width: 48px;
+  text-align: center;
+}
+
 textarea {
   min-height: 80px;
 }
