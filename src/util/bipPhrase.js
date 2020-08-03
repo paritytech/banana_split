@@ -1,5 +1,6 @@
 export default {
   wordlist: [
+    "abandon",
     "ability",
     "able",
     "about",
@@ -1910,8 +1911,7 @@ export default {
     "update",
     "upgrade",
     "uphold",
-    "upon 100 13116  100 13116    0     0  45660      0 --:--:-- --:--:-- --:--:-- 45700",
-    "",
+    "upon",
     "upper",
     "upset",
     "urban",
