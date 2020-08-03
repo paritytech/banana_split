@@ -4,38 +4,42 @@
       Combine shards for <em v-if="title"> {{ title }}</em>
     </h1>
     <div v-if="needMoreShards">
-      <qrcode-stream v-on:decode="onDecode" />
+      <qrcode-stream @decode="onDecode" />
       <div class="codes-row">
         <qriously
-          class="qrcode"
           v-for="code in qrCodes"
-          v-bind:key="code"
-          v-bind:value="code"
-          v-bind:size="200"
-          v-bind:padding="0"
+          :key="code"
+          class="qrcode"
+          :value="code"
+          :size="200"
+          :padding="0"
         />
         <qriously
-          class="qrcode remaining"
           v-for="n in remainingCodes"
-          v-bind:key="n"
-          value='{"t":"Very secret info","r":2,"d":"803c12929ba469d720a63fc8ca6f6ef1cc441f8f0b830ea04f8a484169ec800e4a7","n":"29abbb2c509adedb470f6d3fd3d083362b8c1a9283adf987"}'
-          v-bind:size="200"
+          :key="n"
+          class="qrcode remaining"
+          :value="PLACEHOLDER_QR_DATA"
+          :size="200"
           foreground="#aaa"
-          v-bind:padding="0"
+          :padding="0"
         />
       </div>
     </div>
     <div v-else>
       <input
-        type="text"
         v-model="passphrase"
-        v-on:keyup.enter="reconstruct"
+        type="text"
         placeholder="type your passphrase"
         autofocus
+        @keyup.enter="reconstruct"
       />
-      <button v-on:click="reconstruct">Reconstruct Secret</button>
+      <button @click="reconstruct">
+        Reconstruct Secret
+      </button>
     </div>
-    <h2 class="secret" v-if="recoveredSecret">{{ recoveredSecret }}</h2>
+    <h2 v-if="recoveredSecret" class="secret">
+      {{ recoveredSecret }}
+    </h2>
   </div>
 </template>
 
@@ -43,6 +47,11 @@
 /*eslint no-console: ["error", { allow: ["warn", "error"] }] */
 
 import crypto from "../util/crypto";
+
+// It's actually used in the template
+// eslint-disable-next-line no-unused-vars
+const PLACEHOLDER_QR_DATA =
+  '{"t":"Very secret info","r":2,"d":"803c12929ba469d720a63fc8ca6f6ef1cc441f8f0b830ea04f8a484169ec800e4a7","n":"29abbb2c509adedb470f6d3fd3d083362b8c1a9283adf987"}';
 
 export default {
   name: "Combine",
@@ -68,6 +77,9 @@ export default {
         return this.requiredShards - this.qrCodes.length;
       }
     }
+  },
+  mounted: function() {
+    this.$eventHub.$emit("foldGeneralInfo");
   },
   methods: {
     onDecode: function(result) {
@@ -111,9 +123,6 @@ export default {
       var shards = Array.from(this.shards);
       this.recoveredSecret = crypto.reconstruct(shards, this.passphrase);
     }
-  },
-  mounted: function() {
-    this.$eventHub.$emit("foldGeneralInfo");
   }
 };
 </script>

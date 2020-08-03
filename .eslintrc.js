@@ -18,5 +18,24 @@ module.exports = {
   env: {
     browser: true,
     node: true
+  },
+  rules: {
+    "vue/html-self-closing": [
+      "warning",
+      {
+        html: "never"
+      }
+    ],
+    "vue/v-on-style": ["warning", "longform"],
+    "vue/max-attributes-per-line": [
+      "warning",
+      {
+        singleline: 3,
+        multiline: {
+          max: 1,
+          allowFirstLine: true
+        }
+      }
+    ]
   }
 };

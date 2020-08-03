@@ -5,8 +5,12 @@
     <div v-if="secure">
       <router-view />
       <nav>
-        <router-link to="/share">Create</router-link>
-        <router-link to="/combine">Restore </router-link>
+        <router-link to="/share">
+          Create
+        </router-link>
+        <router-link to="/combine">
+          Restore
+        </router-link>
       </nav>
     </div>
     <SavePageInfo v-else-if="!localFile" />
