@@ -1,0 +1,13 @@
+name: Yarn tests
+
+on: [push, pull_request]
+
+jobs:
+  yarn:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2-beta
+      - run: yarn install
+      - run: yarn test:unit
+      - run: yarn lint
