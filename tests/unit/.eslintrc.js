@@ -6,4 +6,4 @@ module.exports = {
     /*eslint no-console: */
     "no-console": ["error", { allow: ["warn", "error"] }]
   }
-}
+};
