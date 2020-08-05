@@ -7,15 +7,13 @@
         to reconstruct the secret
       </h3>
     </div>
-    <qriously
-      class="qr-code print-only"
-      v-bind:value="shard"
-      v-bind:size="600"
-    />
-    <qriously class="screen-only" v-bind:value="shard" v-bind:size="200" />
+    <qriously class="qr-code print-only" :value="shard" :size="600" />
+    <qriously class="screen-only" :value="shard" :size="200" />
     <div class="print-only">
       <div class="recovery-field">
-        <div class="recovery-title">Recovery&nbsp;passphrase&nbsp;is&nbsp;</div>
+        <div class="recovery-title">
+          Recovery&nbsp;passphrase&nbsp;is&nbsp;
+        </div>
         <div class="recovery-blank" />
       </div>
       <p class="version">
@@ -33,9 +31,18 @@ import { version } from "../../package.json";
 export default {
   name: "ShardQrCode",
   props: {
-    title: String,
-    shard: String,
-    requiredShards: Number
+    title: {
+      type: String,
+      required: true
+    },
+    shard: {
+      type: String,
+      required: true
+    },
+    requiredShards: {
+      type: Number,
+      required: true
+    }
   },
   computed: {
     pluralizeCode: function() {

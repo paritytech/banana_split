@@ -1,7 +1,9 @@
 <template>
   <div class="fold">
-    <h1 class="main-title">Banana split</h1>
-    <input id="fold-header" type="checkbox" name="fold" v-model="unfolded" />
+    <h1 class="main-title">
+      Banana split
+    </h1>
+    <input id="fold-header" v-model="unfolded" type="checkbox" name="fold" />
     <label for="fold-header">
       <h2 v-if="unfolded">Shamir Secret Sharing for people with friends</h2>
       <p v-else>What is this?</p>
@@ -9,9 +11,9 @@
     <div class="fold-content">
       <p>
         Banana Split uses
-        <a href="https://en.wikipedia.org/wiki/Shamir%27s_Secret_Sharing"
-          >Shamir's secret sharing</a
-        >
+        <a href="https://en.wikipedia.org/wiki/Shamir%27s_Secret_Sharing">
+          Shamir's secret sharing
+        </a>
         to make your paper backups more resilient and secure.
       </p>
       <p>

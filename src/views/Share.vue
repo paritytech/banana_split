@@ -5,48 +5,52 @@
       <p>
         Name of your split
         <input
+          v-model="title"
           type="text"
           :disabled="encryptionMode"
-          v-model="title"
           placeholder="Ex: 'My Bitcoin seed phrase'"
           autofocus
         />
       </p>
       <textarea
         v-model="secret"
-        v-bind:class="{ tooLong: secretTooLong }"
+        :class="{ tooLong: secretTooLong }"
         :disabled="encryptionMode"
         placeholder="Your secret goes here"
-      ></textarea>
-      <div v-if="this.secretTooLong">
+      />
+      <div v-if="secretTooLong">
         Inputs longer than 1024 characters make QR codes illegible
       </div>
       <p>
         Will require any {{ requiredShards }} shards out of
-        <input type="number" v-model.number="totalShards" min="3" /> to
+        <input v-model.number="totalShards" type="number" min="3" /> to
         reconstruct
       </p>
       <button :disabled="secretTooLong" v-on:click="toggleMode">
-        <span v-if="this.encryptionMode">Back to editing data</span>
+        <span v-if="encryptionMode">Back to editing data</span>
         <span v-else>Generate QR codes!</span>
       </button>
-      <div v-if="this.encryptionMode">
+      <div v-if="encryptionMode">
         <p>Your passphrase for the recovery is:</p>
         <p>
-          <canvas-text v-bind:text="recoveryPassphrase" />
-          <button v-on:click="regenPassphrase">&#x21ba;</button>
+          <canvas-text :text="recoveryPassphrase" />
+          <button @click="regenPassphrase">
+            &#x21ba;
+          </button>
         </p>
-        <button v-on:click="print">Print us!</button>
+        <button @click="print">
+          Print us!
+        </button>
       </div>
     </div>
 
     <div id="qr-tiles">
       <shard-info
         v-for="shard in shards"
-        v-bind:key="shard"
-        v-bind:shard="shard"
-        v-bind:requiredShards="requiredShards"
-        v-bind:title="title"
+        :key="shard"
+        :shard="shard"
+        :required-shards="requiredShards"
+        :title="title"
       />
     </div>
   </div>
@@ -61,6 +65,7 @@ import CanvasText from "../components/CanvasText";
 
 export default {
   name: "Share",
+  components: { ShardInfo, CanvasText },
   data: function() {
     return {
       title: "",
@@ -70,7 +75,6 @@ export default {
       encryptionMode: false
     };
   },
-  components: { ShardInfo, CanvasText },
   computed: {
     secretTooLong: function() {
       return this.secret.length > 1024;
@@ -91,6 +95,9 @@ export default {
       );
     }
   },
+  mounted: function() {
+    this.$eventHub.$emit("foldGeneralInfo");
+  },
   methods: {
     regenPassphrase: function() {
       this.recoveryPassphrase = bipPhrase.generate(4);
@@ -101,9 +108,6 @@ export default {
     toggleMode: function() {
       this.encryptionMode = !this.encryptionMode;
     }
-  },
-  mounted: function() {
-    this.$eventHub.$emit("foldGeneralInfo");
   }
 };
 </script>
