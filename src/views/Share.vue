@@ -100,7 +100,7 @@ export default {
   },
   methods: {
     regenPassphrase: function() {
-      this.recoveryPassphrase = bipPhrase.generate(4);
+      this.recoveryPassphrase = passPhrase.generate(4);
     },
     print: function() {
       window.print();
