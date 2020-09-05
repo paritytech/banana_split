@@ -59,11 +59,12 @@ export default {
     return {
       title: "",
       nonce: "",
-      shards: new Set(),
+      shards: [],
       qrCodes: [],
       requiredShards: undefined,
       passphrase: "",
-      recoveredSecret: undefined
+      recoveredSecret: undefined,
+      PLACEHOLDER_QR_DATA
     };
   },
   computed: {
@@ -83,8 +84,9 @@ export default {
   },
   methods: {
     onDecode: function(result) {
-      var parsed = crypto.parse(result);
-      if (!this.shards.has(parsed.data)) {
+      const parsed = crypto.parse(result);
+      const jsonParsed = JSON.stringify(parsed);
+      if (!this.shards.includes(jsonParsed)) {
         if (this.title && this.title != parsed.title) {
           console.error("title mismatch!");
           return;
@@ -107,9 +109,10 @@ export default {
           this.requiredShards = parsed.requiredShards;
         }
         this.qrCodes.push(result);
-        this.shards.add(parsed);
+        this.shards.push(jsonParsed);
       } else {
         console.warn("Shard already seen");
+        window.alert("Shard already seen");
       }
     },
     reconstruct: function() {
@@ -120,8 +123,10 @@ export default {
         .split(" ")
         .filter(el => el)
         .join("-");
-      var shards = Array.from(this.shards);
-      this.recoveredSecret = crypto.reconstruct(shards, this.passphrase);
+      this.recoveredSecret = crypto.reconstruct(
+        this.shards.map(JSON.parse),
+        this.passphrase
+      );
     }
   }
 };
