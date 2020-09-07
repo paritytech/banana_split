@@ -112,7 +112,7 @@ body {
 }
 nav {
   display: flex;
-  align-items: center;
+  align-items: baseline;
 }
 
 .card,
