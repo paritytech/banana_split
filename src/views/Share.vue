@@ -57,7 +57,7 @@
 </template>
 
 <script>
-import bipPhrase from "../util/bipPhrase";
+import passPhrase from "../util/passPhrase";
 import crypto from "../util/crypto";
 
 import ShardInfo from "../components/ShardInfo";
@@ -71,7 +71,7 @@ export default {
       title: "",
       secret: "",
       totalShards: 3, // TODO: 5
-      recoveryPassphrase: bipPhrase.generate(4),
+      recoveryPassphrase: passPhrase.generate(4),
       encryptionMode: false
     };
   },
@@ -100,7 +100,7 @@ export default {
   },
   methods: {
     regenPassphrase: function() {
-      this.recoveryPassphrase = bipPhrase.generate(4);
+      this.recoveryPassphrase = passPhrase.generate(4);
     },
     print: function() {
       window.print();
