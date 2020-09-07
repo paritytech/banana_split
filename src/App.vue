@@ -7,6 +7,9 @@
           Banana
           <br />
           Split
+          <span>
+            🍌
+          </span>
         </h1>
         <div class="measure">
           <router-link class="button-nav" to="/share">
@@ -72,7 +75,8 @@ export default {
   --c_text-secondary: #606060;
   --c_text-onEmphasis: #fff;
   --w_app: 620px;
-  --f_main: "Avenir", Helvetica, Arial, sans-serif;
+  --f_main: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 }
 * {
   box-sizing: border-box;
@@ -84,7 +88,7 @@ html {
   -moz-osx-font-smoothing: grayscale;
 }
 body {
-  margin: 0;
+  margin: 2rem 0 0 0;
   color: var(--c_text-main);
   background: var(--c_bg-app);
   font-size: 1.8rem;
@@ -108,7 +112,7 @@ body {
 }
 nav {
   display: flex;
-  align-items: baseline;
+  align-items: center;
 }
 
 .card,
@@ -190,7 +194,7 @@ nav {
 
 h1 {
   font-weight: 600;
-  font-size: 3.5rem;
+  font-size: 3rem;
   line-height: 0.9em;
   letter-spacing: -0.02em;
 }
@@ -216,16 +220,33 @@ textarea:disabled {
 }
 
 #logo {
+  margin: 0 2rem 0 0;
+}
+@media screen and (min-width: 850px) {
+  #logo {
+    position: absolute;
+    left: 2rem;
+    margin: 0;
+  }
+}
+@media screen and (max-width: 500px) {
+  #logo {
+    display: none;
+  }
+}
+#logo span {
+  font-size: 1.2em;
   position: absolute;
-  left: 0;
+  margin: 0.25em 0 0 0.1em;
 }
 
 .button-nav {
+  display: inline-block;
   font-weight: 600;
   font-size: 1.4em;
   color: var(--c_text-main);
   border: 1px solid transparent;
-  padding: 1rem 3rem;
+  padding: 1rem 3rem 1.2rem;
   margin: 0 1rem 0 0;
   border-radius: 1rem;
   text-decoration: none;

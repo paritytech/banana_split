@@ -132,11 +132,6 @@ textarea.tooLong {
   border: 5px solid red;
 }
 
-#share-controls {
-  margin: 0 auto;
-  text-align: left;
-}
-
 #qr-tiles {
   display: flex;
   flex-wrap: wrap;
