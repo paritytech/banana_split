@@ -28,12 +28,16 @@
       </div>
       <p>
         <label>3. Shards</label>
-        <br>
+        <br />
         Will require any {{ requiredShards }} shards out of
         <input v-model.number="totalShards" type="number" min="3" /> to
         reconstructppa
       </p>
-      <button class="button-card" :disabled="secretTooLong" v-on:click="toggleMode">
+      <button
+        class="button-card"
+        :disabled="secretTooLong"
+        v-on:click="toggleMode"
+      >
         <span v-if="encryptionMode">Back to editing data</span>
         <span v-else>Generate QR codes!</span>
       </button>

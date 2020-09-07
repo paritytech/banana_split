@@ -1,9 +1,11 @@
 <template>
   <div>
-
     <div class="card measure" :alt="!recoveredSecret">
       <h2 class="card-title">
-        Combine shards <span v-if="title"> for <em v-if="title"> {{ title }}</em></span>
+        Combine shards
+        <span v-if="title">
+          for <em v-if="title"> {{ title }}</em>
+        </span>
       </h2>
       <div v-if="needMoreShards">
         <qrcode-stream @decode="onDecode" />
@@ -21,8 +23,8 @@
         </p>
         <p>
           <label>2. Secret</label>
-          <textarea v-if="recoveredSecret" readonly>{{ recoveredSecret }}</textarea>
-          <textarea v-else readonly disabled/>
+          <textarea v-if="recoveredSecret" v-model="recoveredSecret" readonly />
+          <textarea v-else readonly disabled />
         </p>
         <div v-if="!recoveredSecret">
           <button class="button-card" @click="reconstruct">
@@ -32,23 +34,22 @@
       </div>
     </div>
 
-     <div class="card flex" alt="true" :framed="recoveredSecret && true">
-        <qriously
-          v-for="code in qrCodes"
-          :key="code"
-          class="card-qr"
-          :value="code"
-          :size="200"
-        />
-        <qriously
-          v-for="n in remainingCodes"
-          :key="n"
-          class="remaining card-qr"
-          :value="PLACEHOLDER_QR_DATA"
-          :size="200"
-        />
-      </div>
-      
+    <div class="card flex" alt="true" :framed="recoveredSecret && true">
+      <qriously
+        v-for="code in qrCodes"
+        :key="code"
+        class="card-qr"
+        :value="code"
+        :size="200"
+      />
+      <qriously
+        v-for="n in remainingCodes"
+        :key="n"
+        class="remaining card-qr"
+        :value="PLACEHOLDER_QR_DATA"
+        :size="200"
+      />
+    </div>
   </div>
 </template>
 

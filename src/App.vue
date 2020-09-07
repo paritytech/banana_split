@@ -3,7 +3,11 @@
     <ForkMe url="https://github.com/paritytech/banana_split" />
     <div v-if="secure">
       <nav>
-        <h1 id="logo">Banana<br />Split</h1>
+        <h1 id="logo">
+          Banana
+          <br />
+          Split
+        </h1>
         <div class="measure">
           <router-link class="button-nav" to="/share">
             Create
