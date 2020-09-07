@@ -1,9 +1,11 @@
 <template>
   <div>
-    <div id="share-controls">
-      <h1>Create a secret split</h1>
+    <div id="share-controls" class="card measure" :alt="!encryptionMode">
+      <h2 class="card-title">
+        Create a secret split
+      </h2>
       <p>
-        Name of your split
+        <label>1. Name of your split</label>
         <input
           v-model="title"
           type="text"
@@ -12,46 +14,55 @@
           autofocus
         />
       </p>
-      <textarea
-        v-model="secret"
-        :class="{ tooLong: secretTooLong }"
-        :disabled="encryptionMode"
-        placeholder="Your secret goes here"
-      />
+      <p>
+        <label>2. Secret</label>
+        <textarea
+          v-model="secret"
+          :class="{ tooLong: secretTooLong }"
+          :disabled="encryptionMode"
+          placeholder="Your secret goes here"
+        />
+      </p>
       <div v-if="secretTooLong">
         Inputs longer than 1024 characters make QR codes illegible
       </div>
       <p>
+        <label>3. Shards</label>
+        <br>
         Will require any {{ requiredShards }} shards out of
         <input v-model.number="totalShards" type="number" min="3" /> to
-        reconstruct
+        reconstructppa
       </p>
-      <button :disabled="secretTooLong" v-on:click="toggleMode">
+      <button class="button-card" :disabled="secretTooLong" v-on:click="toggleMode">
         <span v-if="encryptionMode">Back to editing data</span>
         <span v-else>Generate QR codes!</span>
       </button>
-      <div v-if="encryptionMode">
-        <p>Your passphrase for the recovery is:</p>
-        <p>
+    </div>
+
+    <div v-if="encryptionMode">
+      <div class="card" framed="true" alt="true">
+        <label>4. Your passphrase for the recovery is:</label>
+        <div class="flex justify-between align-center">
           <canvas-text :text="recoveryPassphrase" />
-          <button @click="regenPassphrase">
+          <button class="button-icon" @click="regenPassphrase">
             &#x21ba;
           </button>
-        </p>
-        <button @click="print">
+        </div>
+      </div>
+      <div class="card" alt="true">
+        <button class="button-card" @click="print">
           Print us!
         </button>
       </div>
-    </div>
-
-    <div id="qr-tiles">
-      <shard-info
-        v-for="shard in shards"
-        :key="shard"
-        :shard="shard"
-        :required-shards="requiredShards"
-        :title="title"
-      />
+      <div id="qr-tiles">
+        <shard-info
+          v-for="shard in shards"
+          :key="shard"
+          :shard="shard"
+          :required-shards="requiredShards"
+          :title="title"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -118,7 +129,6 @@ textarea.tooLong {
 }
 
 #share-controls {
-  width: 320px;
   margin: 0 auto;
   text-align: left;
 }
@@ -130,19 +140,8 @@ textarea.tooLong {
 }
 input[type="text"],
 textarea {
-  width: 320px;
+  width: 100%;
   display: block;
-}
-
-input,
-textarea {
-  background: #eee;
-  border: 0;
-  padding: 10px 5px;
-  border-radius: 3px;
-  font-size: 1em;
-  font-weight: 600;
-  font-family: Avenir, Avenir next, Helvetica, Arial;
 }
 
 input:disabled,

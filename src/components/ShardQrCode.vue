@@ -8,7 +8,7 @@
       </h3>
     </div>
     <qriously class="qr-code print-only" :value="shard" :size="600" />
-    <qriously class="screen-only" :value="shard" :size="200" />
+    <qriously class="screen-only card-qr" :value="shard" :size="200" />
     <div class="print-only">
       <div class="recovery-field">
         <div class="recovery-title">
@@ -126,16 +126,6 @@ export default {
   align-items: center;
   width: 100vw;
   height: 100vh;
-}
-
-h1 {
-  font-weight: 600;
-  font-size: 1.5em;
-}
-
-canvas {
-  margin: 0 auto;
-  display: block;
 }
 
 h3,
