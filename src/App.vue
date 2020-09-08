@@ -91,7 +91,7 @@ html {
   -moz-osx-font-smoothing: grayscale;
 }
 body {
-  margin: 2rem 0 0 0;
+  margin: 2rem 0;
   color: var(--c_text-main);
   background: var(--c_bg-app);
   font-size: 1.8rem;
@@ -148,20 +148,20 @@ nav {
   display: inline-flex;
   margin: 0.5rem;
 }
+.card-qr canvas {
+  width: 100%;
+  max-width: 200px;
+}
 .card-qr:not(.remaining) {
   animation: unblur 1s ease;
 }
 @keyframes unblur {
   0% {
-    filter: blur(5px) brightness(200%);
+    filter: brightness(150%);
   }
   100% {
     filter: none;
   }
-}
-.card-qr canvas {
-  width: 100%;
-  max-width: 200px;
 }
 .card-alt {
   background-color: var(--c_bg-emphasis-main);
