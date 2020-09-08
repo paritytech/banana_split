@@ -77,6 +77,7 @@ export default {
   --c_text-main: #222;
   --c_text-secondary: #606060;
   --c_text-onEmphasis: #fff;
+  --c_accent: #FF1864;
   --w_app: 620px;
   --f_main: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
     Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
@@ -216,6 +217,9 @@ h2 {
   font-size: 2.3rem;
   font-weight: 500;
 }
+a {
+  color: var(--c_accent);
+}
 label {
   font-size: 1.6rem;
   color: var(--c_text-secondary);
@@ -240,11 +244,12 @@ textarea:disabled {
 }
 
 #logo {
-  margin: 0 2rem 0 0;
+  margin: 0 2rem;
 }
 @media screen and (min-width: 850px) {
   #logo {
     position: absolute;
+    top: 2.5rem;
     left: 2rem;
     margin: 0;
   }
@@ -252,6 +257,9 @@ textarea:disabled {
 @media screen and (max-width: 500px) {
   #logo {
     display: none;
+  }
+  nav {
+    padding: 0 1rem;
   }
 }
 #logo span {
