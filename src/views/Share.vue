@@ -44,7 +44,7 @@
     </div>
 
     <div v-if="encryptionMode">
-      <div class="card" framed="true" alt="true">
+      <div class="card" framed="true" transparent="true">
         <label>4. Your passphrase for the recovery is:</label>
         <div class="flex justify-between align-center">
           <canvas-text :text="recoveryPassphrase" />
