@@ -171,19 +171,19 @@ nav {
 .card[framed="true"] {
   border: 1px solid var(--c_border-main);
 }
-.card[alt="true"] {
+.card[transparent="true"] {
   background: transparent;
   box-shadow: none;
 }
-.card[alt="true"] .card-title {
+.card[transparent="true"] .card-title {
   border-bottom-color: transparent;
 }
-.card[alt="true"] .button-card {
+.card[transparent="true"] .button-card {
   background-color: var(--c_bg-emphasis-main);
   color: var(--c_text-onEmphasis);
   text-decoration: none;
 }
-.card[alt="true"] .button-card:hover {
+.card[transparent="true"] .button-card:hover {
   background-color: var(--c_bg-emphasis-dark);
 }
 .card-title {

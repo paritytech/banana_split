@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="card measure" :alt="!recoveredSecret">
+    <div class="card measure" :transparent="!recoveredSecret">
       <h2 class="card-title">
         Combine shards
         <span v-if="title">
@@ -34,7 +34,7 @@
       </div>
     </div>
 
-    <div class="card flex" alt="true" :framed="recoveredSecret && true">
+    <div class="card flex" transparent="true" :framed="recoveredSecret && true">
       <qriously
         v-for="code in qrCodes"
         :key="code"

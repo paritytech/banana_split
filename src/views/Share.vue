@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="card" :alt="!encryptionMode">
+    <div class="card" :transparent="!encryptionMode">
       <h2 class="card-title">
         Create a secret split
       </h2>
@@ -53,7 +53,7 @@
           </button>
         </div>
       </div>
-      <div class="card" alt="true">
+      <div class="card" transparent="true">
         <button class="button-card" @click="print">
           Print us!
         </button>
