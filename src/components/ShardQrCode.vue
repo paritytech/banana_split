@@ -67,10 +67,6 @@ export default {
   .print-only {
     display: none;
   }
-
-  .qr-tile {
-    display: inline-block;
-  }
 }
 
 @media print {
@@ -79,6 +75,12 @@ export default {
   }
 
   .qr-tile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    text-align: center;
     page-break-after: always;
   }
 
@@ -114,20 +116,6 @@ export default {
     width: min(75vw, 75vh) !important;
   }
 } */
-
-.qr-tile {
-  position: relative;
-  font-family: "Avenir Next Condensed", "Avenir", Helvetica, Arial, sans-serif;
-  margin: 0 auto;
-  padding: 0;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100vw;
-  height: 100vh;
-}
-
 h3,
 h4 {
   font-weight: 400;

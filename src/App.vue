@@ -1,33 +1,36 @@
 <template>
-  <div id="app" class="measure">
-    <ForkMe url="https://github.com/paritytech/banana_split" />
-    <div v-if="secure">
-      <nav>
-        <h1 id="logo">
-          Banana
-          <br />
-          Split
-          <span>
-            🍌
-          </span>
-        </h1>
-        <div class="measure">
-          <router-link class="button-nav" to="/share">
-            Create
-          </router-link>
-          <router-link class="button-nav" to="/combine">
-            Restore
-          </router-link>
-        </div>
-        <GeneralInfo />
-      </nav>
-      <router-view />
+  <div>
+    <div id="app" class="measure">
+      <ForkMe url="https://github.com/paritytech/banana_split" />
+      <div v-if="secure">
+        <nav>
+          <h1 id="logo">
+            Banana
+            <br />
+            Split
+            <span>
+              🍌
+            </span>
+          </h1>
+          <div class="measure">
+            <router-link class="button-nav" to="/share">
+              Create
+            </router-link>
+            <router-link class="button-nav" to="/combine">
+              Restore
+            </router-link>
+          </div>
+          <GeneralInfo />
+        </nav>
+        <router-view />
+      </div>
+      <SavePageInfo v-else-if="!localFile" />
+      <GoOfflineInfo v-else-if="isOnline" />
+      <p class="version-footer">
+        BananaSplit version {{ version }}, git revision {{ gitRevision }}
+      </p>
     </div>
-    <SavePageInfo v-else-if="!localFile" />
-    <GoOfflineInfo v-else-if="isOnline" />
-    <p class="version-footer">
-      BananaSplit version {{ version }}, git revision {{ gitRevision }}
-    </p>
+    <div id="print" class="measure flex" />
   </div>
 </template>
 
@@ -107,9 +110,20 @@ body {
   align-items: center;
 }
 
-#app {
+#app,
+#print {
   margin: auto;
 }
+@media print {
+  #app {
+    display: none;
+  }
+  #print {
+    display: block;
+    width: auto;
+  }
+}
+
 nav {
   display: flex;
   align-items: baseline;
@@ -208,6 +222,7 @@ label {
 }
 input,
 textarea {
+  width: 100%;
   background: var(--c_bg-card);
   border: 1px solid var(--c_border-main);
   padding: 1rem;
@@ -215,8 +230,13 @@ textarea {
   font-size: 2rem;
   font-family: var(--f_main);
 }
+textarea {
+  min-height: 120px;
+}
+input:disabled,
 textarea:disabled {
   background: transparent;
+  opacity: 0.5;
 }
 
 #logo {
@@ -272,12 +292,6 @@ button {
   font-size: 4rem;
   line-height: 0.8em;
   background: transparent;
-}
-
-@media print {
-  #app {
-    display: none;
-  }
 }
 
 .version-footer {

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div id="share-controls" class="card measure" :alt="!encryptionMode">
+    <div class="card" :alt="!encryptionMode">
       <h2 class="card-title">
         Create a secret split
       </h2>
@@ -22,16 +22,16 @@
           :disabled="encryptionMode"
           placeholder="Your secret goes here"
         />
+        <span v-if="secretTooLong" class="error-text">
+          Inputs longer than 1024 characters make QR codes illegible
+        </span>
       </p>
-      <div v-if="secretTooLong">
-        Inputs longer than 1024 characters make QR codes illegible
-      </div>
       <p>
         <label>3. Shards</label>
         <br />
         Will require any {{ requiredShards }} shards out of
         <input v-model.number="totalShards" type="number" min="3" /> to
-        reconstructppa
+        reconstruct
       </p>
       <button
         class="button-card"
@@ -57,8 +57,6 @@
         <button class="button-card" @click="print">
           Print us!
         </button>
-      </div>
-      <div id="qr-tiles">
         <shard-info
           v-for="shard in shards"
           :key="shard"
@@ -131,37 +129,11 @@ export default {
 textarea.tooLong {
   border: 5px solid red;
 }
-
-#qr-tiles {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-evenly;
-}
-input[type="text"],
-textarea {
-  width: 100%;
-  display: block;
-}
-
-input:disabled,
-textarea:disabled {
-  opacity: 0.5;
-  color: #99928f;
-}
-
 input[type="number"] {
   width: 48px;
   text-align: center;
 }
-
-textarea {
-  min-height: 80px;
-}
-@media screen {
-  #qr-tiles {
-    width: calc(70%);
-    margin-left: calc(15%);
-    flex-direction: row;
-  }
+.error-text {
+  color: red;
 }
 </style>

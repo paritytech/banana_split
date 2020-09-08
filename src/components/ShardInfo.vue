@@ -26,7 +26,8 @@ export default {
   },
   render: function() {
     var element = document.createElement("div");
-    document.body.appendChild(element);
+    var print = document.getElementById("print");
+    print.appendChild(element);
     var passedProps = this.$props;
     this.vm = new Vue({
       el: element,
