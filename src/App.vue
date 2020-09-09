@@ -2,17 +2,17 @@
   <div>
     <div id="app" class="measure">
       <ForkMe url="https://github.com/paritytech/banana_split" />
-      <div v-if="secure">
-        <nav>
-          <h1 id="logo">
-            Banana
-            <br />
-            Split
-            <span>
-              🍌
-            </span>
-          </h1>
-          <div class="measure">
+      <nav>
+        <h1 id="logo">
+          Banana
+          <br />
+          Split
+          <span>
+            🍌
+          </span>
+        </h1>
+        <div class="measure">
+          <div v-if="secure">
             <router-link class="button-nav" to="/share">
               Create
             </router-link>
@@ -20,10 +20,11 @@
               Restore
             </router-link>
           </div>
-          <GeneralInfo />
-        </nav>
-        <router-view />
-      </div>
+        </div>
+        <GeneralInfo />
+      </nav>
+
+      <router-view v-if="secure" />
       <SavePageInfo v-else-if="!localFile" />
       <GoOfflineInfo v-else-if="isOnline" />
       <p class="version-footer">
@@ -99,7 +100,7 @@ body {
 }
 .measure {
   width: var(--w_app);
-  max-width: 100vw;
+  max-width: calc(100vw - 2rem);
 }
 .flex {
   display: flex;
@@ -257,9 +258,6 @@ textarea:disabled {
 @media screen and (max-width: 500px) {
   #logo {
     display: none;
-  }
-  nav {
-    padding: 0 1rem;
   }
 }
 #logo span {

@@ -1,10 +1,10 @@
 <template>
-  <div class="warning">
-    <h1>Please save this page to your local drive before use</h1>
-    <div>
+  <div class="warning card">
+    <h2>Please save this page to your local drive before use</h2>
+    <p>
       Please <a href="." download="BananaSplit.html">save this html file</a> to
       a folder on your local drive, and then open the file from there.
-    </div>
+    </p>
   </div>
 </template>
 
@@ -15,7 +15,7 @@ export default {
 </script>
 
 <style>
-.warning {
+.card.warning {
   background: #ffbbb3;
   border: solid #e87f73 7px;
 }
