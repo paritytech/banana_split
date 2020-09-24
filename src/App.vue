@@ -245,20 +245,8 @@ textarea:disabled {
 }
 
 #logo {
-  margin: 0 2rem;
-}
-@media screen and (min-width: 850px) {
-  #logo {
-    position: absolute;
-    top: 2.5rem;
-    left: 2rem;
-    margin: 0;
-  }
-}
-@media screen and (max-width: 500px) {
-  #logo {
-    display: none;
-  }
+  margin: 0 2rem 0 0;
+  transform: translateY(-1rem);
 }
 #logo span {
   font-size: 1.2em;
@@ -304,5 +292,22 @@ button {
   font-size: 80%;
   font-style: italic;
   color: darkgray;
+}
+
+@media screen and (min-width: 850px) {
+  #logo {
+    position: absolute;
+    top: 3.5rem;
+    left: 2rem;
+    margin: 0;
+  }
+}
+@media screen and (max-width: 530px) {
+  #logo {
+    display: none;
+  }
+  .fold input:checked ~ .fold-content {
+    margin-top: 6rem;
+  }
 }
 </style>

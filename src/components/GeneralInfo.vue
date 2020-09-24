@@ -69,7 +69,6 @@ export default {
   position: relative;
   display: flex;
   align-items: center;
-  width: 150px;
   cursor: pointer;
 }
 .fold-content {
