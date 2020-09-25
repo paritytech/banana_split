@@ -128,7 +128,7 @@ body {
 
 nav {
   display: flex;
-  align-items: baseline;
+  align-items: flex-end;
 }
 
 .card,
@@ -246,7 +246,6 @@ textarea:disabled {
 
 #logo {
   margin: 0 2rem 0 0;
-  transform: translateY(-1rem);
 }
 #logo span {
   font-size: 1.2em;
@@ -297,7 +296,7 @@ button {
 @media screen and (min-width: 850px) {
   #logo {
     position: absolute;
-    top: 3.5rem;
+    top: 2.5rem;
     left: 2rem;
     margin: 0;
   }
@@ -306,8 +305,10 @@ button {
   #logo {
     display: none;
   }
+}
+@media screen and (max-width: 415px) {
   .fold input:checked ~ .fold-content {
-    margin-top: 6rem;
+    margin-bottom: 100px;
   }
 }
 </style>

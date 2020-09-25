@@ -66,21 +66,28 @@ export default {
   visibility: hidden;
 }
 .fold label {
-  position: relative;
   display: flex;
   align-items: center;
   cursor: pointer;
+  transform: translateY(0.5rem);
 }
 .fold-content {
   max-height: 0;
+  padding: 0 !important;
   overflow: hidden;
+  transition: max-height 0.3s, margin 0.3s, opacity 0.25s;
+}
+.fold-content > * {
+  padding: 0 3rem;
 }
 .fold input[type="checkbox"]:not(:checked) ~ .fold-content {
-  padding: 0;
   margin: 0;
+  opacity: 0;
 }
 .fold input:checked ~ .fold-content {
-  max-height: none;
+  max-height: 999px;
+  margin-bottom: 60px;
+  opacity: 1;
 }
 
 .fold label::before {
