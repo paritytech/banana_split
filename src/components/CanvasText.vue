@@ -12,7 +12,7 @@ export default {
       context.fillStyle = "black";
       context.font = "20px Arial";
       var textSize = context.measureText(binding.value);
-      canvasElement.setAttribute("width", textSize.width + 30 + "px");
+      canvasElement.setAttribute("width", textSize.width + 20 + "px");
       context.font = "20px Arial";
       context.fillText(binding.value, 15, 20);
     }
@@ -25,9 +25,3 @@ export default {
   }
 };
 </script>
-
-<style>
-.canvasText {
-  margin-bottom: -8px;
-}
-</style>

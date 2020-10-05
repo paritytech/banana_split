@@ -1,9 +1,11 @@
 <template>
   <div>
-    <div id="share-controls">
-      <h1>Create a secret split</h1>
+    <div class="card" :transparent="!encryptionMode">
+      <h2 class="card-title">
+        Create a secret split
+      </h2>
       <p>
-        Name of your split
+        <label>1. Name of your split</label>
         <input
           v-model="title"
           type="text"
@@ -12,46 +14,57 @@
           autofocus
         />
       </p>
-      <textarea
-        v-model="secret"
-        :class="{ tooLong: secretTooLong }"
-        :disabled="encryptionMode"
-        placeholder="Your secret goes here"
-      />
-      <div v-if="secretTooLong">
-        Inputs longer than 1024 characters make QR codes illegible
-      </div>
       <p>
+        <label>2. Secret</label>
+        <textarea
+          v-model="secret"
+          :class="{ tooLong: secretTooLong }"
+          :disabled="encryptionMode"
+          placeholder="Your secret goes here"
+        />
+        <span v-if="secretTooLong" class="error-text">
+          Inputs longer than 1024 characters make QR codes illegible
+        </span>
+      </p>
+      <p>
+        <label>3. Shards</label>
+        <br />
         Will require any {{ requiredShards }} shards out of
         <input v-model.number="totalShards" type="number" min="3" /> to
         reconstruct
       </p>
-      <button :disabled="secretTooLong" v-on:click="toggleMode">
+      <button
+        class="button-card"
+        :disabled="secretTooLong"
+        v-on:click="toggleMode"
+      >
         <span v-if="encryptionMode">Back to editing data</span>
         <span v-else>Generate QR codes!</span>
       </button>
-      <div v-if="encryptionMode">
-        <p>Your passphrase for the recovery is:</p>
-        <p>
-          <canvas-text :text="recoveryPassphrase" />
-          <button @click="regenPassphrase">
-            &#x21ba;
-          </button>
-        </p>
-        <button @click="print">
-          Print us!
-        </button>
-      </div>
     </div>
 
-    <div id="qr-tiles">
-      <shard-info
-        v-for="shard in shards"
-        :key="shard"
-        :shard="shard"
-        :required-shards="requiredShards"
-        :title="title"
-      />
+    <div v-if="encryptionMode">
+      <div class="card" framed="true" transparent="true">
+        <label>4. Your passphrase for the recovery is:</label>
+        <div class="flex justify-between align-center">
+          <canvas-text :text="recoveryPassphrase" />
+          <button class="button-icon" @click="regenPassphrase">
+            &#x21ba;
+          </button>
+        </div>
+      </div>
+      <div class="card" transparent="true">
+        <button class="button-card" @click="print">
+          Print us!
+        </button>
+        <shard-info
+          v-for="shard in shards"
+          :key="shard"
+          :shard="shard"
+          :required-shards="requiredShards"
+          :title="title"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -116,54 +129,11 @@ export default {
 textarea.tooLong {
   border: 5px solid red;
 }
-
-#share-controls {
-  width: 320px;
-  margin: 0 auto;
-  text-align: left;
-}
-
-#qr-tiles {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-evenly;
-}
-input[type="text"],
-textarea {
-  width: 320px;
-  display: block;
-}
-
-input,
-textarea {
-  background: #eee;
-  border: 0;
-  padding: 10px 5px;
-  border-radius: 3px;
-  font-size: 1em;
-  font-weight: 600;
-  font-family: Avenir, Avenir next, Helvetica, Arial;
-}
-
-input:disabled,
-textarea:disabled {
-  opacity: 0.5;
-  color: #99928f;
-}
-
 input[type="number"] {
   width: 48px;
   text-align: center;
 }
-
-textarea {
-  min-height: 80px;
-}
-@media screen {
-  #qr-tiles {
-    width: calc(70%);
-    margin-left: calc(15%);
-    flex-direction: row;
-  }
+.error-text {
+  color: red;
 }
 </style>

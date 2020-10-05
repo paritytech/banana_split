@@ -1,14 +1,11 @@
 <template>
   <div class="fold">
-    <h1 class="main-title">
-      Banana split
-    </h1>
     <input id="fold-header" v-model="unfolded" type="checkbox" name="fold" />
     <label for="fold-header">
-      <h2 v-if="unfolded">Shamir Secret Sharing for people with friends</h2>
-      <p v-else>What is this?</p>
+      <h2>What is this?</h2>
     </label>
-    <div class="fold-content">
+    <div class="fold-content measure card-alt">
+      <h2>Shamir Secret Sharing for people with friends</h2>
       <p>
         Banana Split uses
         <a href="https://en.wikipedia.org/wiki/Shamir%27s_Secret_Sharing">
@@ -58,48 +55,45 @@ export default {
 </script>
 
 <style>
-.main-title::before,
-.main-title::after {
-  display: inline-block;
-  padding: 0 20px;
-  content: "\1F34C\1F368";
-}
-.main-title::after {
-  transform: scaleX(-1);
-}
 .fold {
-  position: relative;
-  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  width: 150px;
 }
 .fold input {
   position: absolute;
-  opacity: 0;
-  z-index: -1;
+  visibility: hidden;
 }
 .fold label {
-  position: relative;
+  display: flex;
+  align-items: center;
   cursor: pointer;
-}
-.fold label * {
-  display: inline-block;
+  transform: translateY(0.5rem);
 }
 .fold-content {
   max-height: 0;
-  padding: 10px 30px;
+  padding: 0 !important;
   overflow: hidden;
-  -webkit-transition: max-height 0.35s;
-  -o-transition: max-height 0.35s;
-  transition: max-height 0.35s;
-  text-align: left;
+  transition: max-height 0.3s, margin 0.3s, opacity 0.25s;
+}
+.fold-content > * {
+  padding: 0 3rem;
+}
+.fold input[type="checkbox"]:not(:checked) ~ .fold-content {
+  margin: 0;
+  opacity: 0;
 }
 .fold input:checked ~ .fold-content {
-  max-height: 100vh;
+  max-height: 999px;
+  margin-bottom: 60px;
+  opacity: 1;
 }
+
 .fold label::before {
-  display: inline;
-  -webkit-transition: all 0.35s;
-  -o-transition: all 0.35s;
-  transition: all 0.35s;
+  margin: 0 4px 0 0;
+  width: 1em;
+  overflow: hidden;
 }
 .fold input[type="checkbox"]:not(:checked) + label::before {
   content: "▶";

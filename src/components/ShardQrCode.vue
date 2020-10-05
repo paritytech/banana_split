@@ -8,7 +8,7 @@
       </h3>
     </div>
     <qriously class="qr-code print-only" :value="shard" :size="600" />
-    <qriously class="screen-only" :value="shard" :size="200" />
+    <qriously class="screen-only card-qr" :value="shard" :size="200" />
     <div class="print-only">
       <div class="recovery-field">
         <div class="recovery-title">
@@ -67,10 +67,6 @@ export default {
   .print-only {
     display: none;
   }
-
-  .qr-tile {
-    display: inline-block;
-  }
 }
 
 @media print {
@@ -79,6 +75,12 @@ export default {
   }
 
   .qr-tile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    text-align: center;
     page-break-after: always;
   }
 
@@ -114,30 +116,6 @@ export default {
     width: min(75vw, 75vh) !important;
   }
 } */
-
-.qr-tile {
-  position: relative;
-  font-family: "Avenir Next Condensed", "Avenir", Helvetica, Arial, sans-serif;
-  margin: 0 auto;
-  padding: 0;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100vw;
-  height: 100vh;
-}
-
-h1 {
-  font-weight: 600;
-  font-size: 1.5em;
-}
-
-canvas {
-  margin: 0 auto;
-  display: block;
-}
-
 h3,
 h4 {
   font-weight: 400;
