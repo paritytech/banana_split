@@ -167,25 +167,24 @@ function reconstruct(shardObjects: Shard[], passphrase: string): string {
   }
 
   switch (versions[0]) {
-    case 0:
-      var shardData = shardObjects.map(shard => shard.data),
-        encryptedSecret = SECRETS.combine(shardData),
-        secret = dehexify(encryptedSecret),
-        nonce = dehexify(nonces[0]),
-        salt = hashString(titles[0]);
+    case 0: {
+      const shardData = shardObjects.map(shard => shard.data);
+      const encryptedSecret = SECRETS.combine(shardData);
+      const secret = dehexify(encryptedSecret);
+      const nonce = dehexify(nonces[0]);
+      const salt = hashString(titles[0]);
       return uint8ArrayToStr(decrypt(secret, salt, passphrase, nonce));
-
-    case 1:
-      var shardDataV1 = shardObjects.map(
-          shard =>
-            shard.data[0] + hexify(BASE64.toByteArray(shard.data.slice(1)))
-        ),
-        encryptedSecretV1 = SECRETS.combine(shardDataV1),
-        secretV1 = dehexify(encryptedSecretV1),
-        nonceV1 = BASE64.toByteArray(nonces[0]),
-        saltV1 = hashString(titles[0]);
+    }
+    case 1: {
+      const shardDataV1 = shardObjects.map(
+        shard => shard.data[0] + hexify(BASE64.toByteArray(shard.data.slice(1)))
+      );
+      const encryptedSecretV1 = SECRETS.combine(shardDataV1);
+      const secretV1 = dehexify(encryptedSecretV1);
+      const nonceV1 = BASE64.toByteArray(nonces[0]);
+      const saltV1 = hashString(titles[0]);
       return uint8ArrayToStr(decrypt(secretV1, saltV1, passphrase, nonceV1));
-
+    }
     default:
       throw "Version is not supported!";
   }

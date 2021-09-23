@@ -1,13 +1,5 @@
 import Vue from "vue";
 
-declare module "vue/types/vue" {
-  interface Vue {
-    $eventHub: Vue;
-    vm: Vue;
-    isOnline: boolean;
-  }
-}
-
 // @ts-ignore
 import VueQriously from "vue-qriously";
 Vue.use(VueQriously);
