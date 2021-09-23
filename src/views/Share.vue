@@ -69,17 +69,26 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import passPhrase from "../util/passPhrase";
 import crypto from "../util/crypto";
 
-import ShardInfo from "../components/ShardInfo";
-import CanvasText from "../components/CanvasText";
+import ShardInfo from "../components/ShardInfo.vue";
+import CanvasText from "../components/CanvasText.vue";
+import Vue from "vue";
 
-export default {
+type ShareData = {
+  title: string;
+  secret: string;
+  totalShards: number;
+  recoveryPassphrase: string;
+  encryptionMode: boolean;
+};
+
+export default Vue.extend({
   name: "Share",
   components: { ShardInfo, CanvasText },
-  data: function() {
+  data(): ShareData {
     return {
       title: "",
       secret: "",
@@ -89,13 +98,13 @@ export default {
     };
   },
   computed: {
-    secretTooLong: function() {
+    secretTooLong(): boolean {
       return this.secret.length > 1024;
     },
-    requiredShards: function() {
+    requiredShards(): number {
       return Math.floor(this.totalShards / 2) + 1;
     },
-    shards: function() {
+    shards(): string[] {
       if (!this.encryptionMode) {
         return [];
       }
@@ -122,7 +131,7 @@ export default {
       this.encryptionMode = !this.encryptionMode;
     }
   }
-};
+});
 </script>
 
 <style>
