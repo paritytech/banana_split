@@ -7778,12 +7778,13 @@ export default {
     "zoom"
   ],
 
-  generate: function(amount) {
-    const Crypto = window.crypto || window.msCrypto;
-    var keys = new Uint16Array(amount);
+  generate: function(amount: number) {
+    // @ts-ignore
+    const Crypto = window.crypto || window.msCrypto; // for IE 11;
+    const keys = new Uint16Array(amount);
     Crypto.getRandomValues(keys);
 
-    var wordlist = this.wordlist;
+    const wordlist = this.wordlist;
     return (
       Array.from(keys.map(key => key % 2048))
         // `key` is an element in `keys`, which can only hold Uints;

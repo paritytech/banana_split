@@ -53,33 +53,46 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 /*eslint no-console: ["error", { allow: ["warn", "error"] }] */
 
-import crypto from "../util/crypto";
+import crypto, { Shard } from "../util/crypto";
+import Vue from "vue";
 
-export default {
+type CombineData = {
+  title: string;
+  nonce: string;
+  shards: Shard[];
+  qrCodes: Set<string>;
+  requiredShards?: number;
+  passphrase: string;
+  recoveredSecret?: string;
+  PLACEHOLDER_QR_DATA: string;
+};
+
+export default Vue.extend({
   name: "Combine",
-  data: function() {
+  data(): CombineData {
     return {
       title: "",
       nonce: "",
-      shards: new Set(),
-      qrCodes: [],
+      shards: [],
+      qrCodes: new Set(),
       requiredShards: undefined,
       passphrase: "",
-      recoveredSecret: undefined
+      recoveredSecret: undefined,
+      PLACEHOLDER_QR_DATA: ""
     };
   },
   computed: {
-    needMoreShards: function() {
-      return !this.requiredShards || this.qrCodes.length < this.requiredShards;
+    needMoreShards(): boolean {
+      return !this.requiredShards || this.shards.length < this.requiredShards;
     },
-    remainingCodes: function() {
+    remainingCodes(): number {
       if (!this.requiredShards) {
         return 0;
       } else {
-        return this.requiredShards - this.qrCodes.length;
+        return this.requiredShards - this.shards.length;
       }
     }
   },
@@ -87,35 +100,35 @@ export default {
     this.$eventHub.$emit("foldGeneralInfo");
   },
   methods: {
-    onDecode: function(result) {
-      var parsed = crypto.parse(result);
-      if (!this.shards.has(parsed.data)) {
-        if (this.title && this.title != parsed.title) {
-          console.error("title mismatch!");
-          return;
-        } else {
-          this.title = parsed.title;
-        }
-        if (this.nonce && this.nonce != parsed.nonce) {
-          console.error("nonce mismatch!");
-          return;
-        } else {
-          this.nonce = parsed.nonce;
-        }
-        if (
-          this.requiredShards &&
-          this.requiredShards != parsed.requiredShards
-        ) {
-          console.error("requiredShards mismatch");
-          return;
-        } else {
-          this.requiredShards = parsed.requiredShards;
-        }
-        this.qrCodes.push(result);
-        this.shards.add(parsed);
-      } else {
+    onDecode: function(result: string) {
+      if (this.qrCodes.has(result)) {
         console.warn("Shard already seen");
+        return;
       }
+      const parsed = crypto.parse(result);
+      if (this.title && this.title !== parsed.title) {
+        console.error("title mismatch!");
+        return;
+      } else {
+        this.title = parsed.title;
+      }
+      if (this.nonce && this.nonce !== parsed.nonce) {
+        console.error("nonce mismatch!");
+        return;
+      } else {
+        this.nonce = parsed.nonce;
+      }
+      if (
+        this.requiredShards &&
+        this.requiredShards !== parsed.requiredShards
+      ) {
+        console.error("requiredShards mismatch");
+        return;
+      } else {
+        this.requiredShards = parsed.requiredShards;
+      }
+      this.qrCodes.add(result);
+      this.shards.push(parsed);
     },
     reconstruct: function() {
       if (!this.passphrase) {
@@ -125,11 +138,11 @@ export default {
         .split(" ")
         .filter(el => el)
         .join("-");
-      var shards = Array.from(this.shards);
+      const shards = Array.from(this.shards);
       this.recoveredSecret = crypto.reconstruct(shards, this.passphrase);
     }
   }
-};
+});
 </script>
 
 <style>

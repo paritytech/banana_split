@@ -1,5 +1,7 @@
+import { VueConstructor } from "vue";
+
 const plugin = {
-  install(Vue) {
+  install(Vue: VueConstructor) {
     const vm = new Vue({
       data: {
         online: window.navigator.onLine

@@ -1,8 +1,10 @@
 import Vue from "vue";
 
+// @ts-ignore
 import VueQriously from "vue-qriously";
 Vue.use(VueQriously);
 
+// @ts-ignore
 import QrcodeStream from "vue-qrcode-reader";
 Vue.use(QrcodeStream);
 

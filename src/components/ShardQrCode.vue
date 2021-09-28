@@ -26,9 +26,10 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from "vue";
 import { version } from "../../package.json";
-export default {
+export default Vue.extend({
   name: "ShardQrCode",
   props: {
     title: {
@@ -59,7 +60,7 @@ export default {
       return process.env.GIT_REVISION;
     }
   }
-};
+});
 </script>
 
 <style>

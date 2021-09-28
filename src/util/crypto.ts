@@ -4,6 +4,20 @@ const SCRYPT = require("scryptsy");
 
 const SECRETS = require("secrets.js-grempe");
 
+export type Shard = {
+  data: string;
+  version: number;
+  title: string;
+  nonce: string;
+  requiredShards: number;
+};
+
+type EncryptedData = {
+  value: Uint8Array;
+  nonce: Uint8Array;
+  salt: Uint8Array;
+};
+
 const HexEncodeArray = [
   "0",
   "1",
@@ -23,34 +37,34 @@ const HexEncodeArray = [
   "f"
 ];
 
-function strToUint8Array(str) {
-  return new TextEncoder("utf-8").encode(str);
+function strToUint8Array(str: string): Uint8Array {
+  return new TextEncoder().encode(str);
 }
 
-function uint8ArrayToStr(arr) {
+function uint8ArrayToStr(arr: Uint8Array): string {
   return new TextDecoder("utf-8").decode(arr);
 }
 
-function hashString(str) {
+function hashString(str: string): Uint8Array {
   return CRYPTO.hash(strToUint8Array(str));
 }
 
-function hexify(arr) {
-  var s = "";
-  for (var i = 0; i < arr.length; i++) {
+function hexify(arr: Uint8Array): string {
+  let s = "";
+  for (let i = 0; i < arr.length; i++) {
     // `i` is a numerical counter for the loop and is never changed outside of there
     // therefore `i` is numerical, and is safe to use as an array index
     // eslint-disable-next-line security/detect-object-injection
-    var code = arr[i];
+    const code = arr[i];
     s += HexEncodeArray[code >>> 4];
     s += HexEncodeArray[code & 0x0f];
   }
   return s;
 }
 
-function dehexify(str) {
-  var arr = new Uint8Array(str.length / 2);
-  for (var i = 0; i < arr.length; i++) {
+function dehexify(str: string): Uint8Array {
+  const arr = new Uint8Array(str.length / 2);
+  for (let i = 0; i < arr.length; i++) {
     // `i` is a numerical counter for the loop and is never changed outside of there
     // therefore `i` is numerical, and is safe to use as an array index
     // eslint-disable-next-line security/detect-object-injection
@@ -59,9 +73,13 @@ function dehexify(str) {
   return arr;
 }
 
-function encrypt(data, salt, passphrase) {
-  var key = SCRYPT(passphrase, Buffer.from(salt), 1 << 15, 8, 1, 32);
-  var nonce = CRYPTO.randomBytes(24);
+function encrypt(
+  data: string,
+  salt: Uint8Array,
+  passphrase: string
+): EncryptedData {
+  const key = SCRYPT(passphrase, Buffer.from(salt), 1 << 15, 8, 1, 32);
+  const nonce = CRYPTO.randomBytes(24);
   return {
     nonce,
     salt,
@@ -69,23 +87,34 @@ function encrypt(data, salt, passphrase) {
   };
 }
 
-function decrypt(data, salt, passphrase, nonce) {
-  var key = SCRYPT(passphrase, Buffer.from(salt.buffer), 1 << 15, 8, 1, 32);
+function decrypt(
+  data: Uint8Array,
+  salt: Uint8Array,
+  passphrase: string,
+  nonce: Uint8Array
+): Uint8Array {
+  const key = SCRYPT(passphrase, Buffer.from(salt.buffer), 1 << 15, 8, 1, 32);
   // This is a false positive, `secretbox.open` is unrelated to `fs.open`
   // eslint-disable-next-line security/detect-non-literal-fs-filename
   return CRYPTO.secretbox.open(data, nonce, key);
 }
 
-function share(data, title, passphrase, totalShards, requiredShards) {
-  var salt = hashString(title);
-  var encrypted = encrypt(data, salt, passphrase);
-  var nonce = BASE64.fromByteArray(encrypted.nonce);
-  var hexEncrypted = hexify(encrypted.value);
+function share(
+  data: string,
+  title: string,
+  passphrase: string,
+  totalShards: number,
+  requiredShards: number
+): string[] {
+  const salt = hashString(title),
+    encrypted = encrypt(data, salt, passphrase),
+    nonce = BASE64.fromByteArray(encrypted.nonce),
+    hexEncrypted = hexify(encrypted.value);
   return SECRETS.share(hexEncrypted, totalShards, requiredShards).map(function(
-    shard
+    shard: string
   ) {
     // First char is non-hex (base36) and signifies the bitfield size of our share
-    var encodedShard =
+    const encodedShard =
       shard[0] + BASE64.fromByteArray(dehexify(shard.slice(1)));
 
     return JSON.stringify({
@@ -100,7 +129,7 @@ function share(data, title, passphrase, totalShards, requiredShards) {
   });
 }
 
-function parse(payload) {
+function parse(payload: string): Shard {
   let parsed = JSON.parse(payload);
   return {
     version: parsed.v || 0, // 'undefined' version is treated as 0
@@ -111,8 +140,8 @@ function parse(payload) {
   };
 }
 
-function reconstruct(shardObjects, passphrase) {
-  var shardsRequirements = shardObjects.map(shard => shard.requiredShards);
+function reconstruct(shardObjects: Shard[], passphrase: string): string {
+  const shardsRequirements = shardObjects.map(shard => shard.requiredShards);
   if (!shardsRequirements.every(r => r === shardsRequirements[0])) {
     throw "Mismatching min shards requirement among shards!";
   }
@@ -122,40 +151,40 @@ function reconstruct(shardObjects, passphrase) {
     } provided`;
   }
 
-  var nonces = shardObjects.map(shard => shard.nonce);
+  const nonces = shardObjects.map(shard => shard.nonce);
   if (!nonces.every(n => n === nonces[0])) {
     throw "Nonces mismatch among shards!";
   }
 
-  var titles = shardObjects.map(shard => shard.title);
+  const titles = shardObjects.map(shard => shard.title);
   if (!titles.every(t => t === titles[0])) {
     throw "Titles mismatch among shards!";
   }
 
-  var versions = shardObjects.map(shard => shard.version);
+  const versions = shardObjects.map(shard => shard.version);
   if (!versions.every(v => v === versions[0])) {
     throw "Versions mismatch along shards!";
   }
 
   switch (versions[0]) {
-    case 0:
-      var shardData = shardObjects.map(shard => shard.data);
-      var encryptedSecret = SECRETS.combine(shardData);
-      var secret = dehexify(encryptedSecret);
-      var nonce = dehexify(nonces[0]);
-      var salt = hashString(titles[0]);
+    case 0: {
+      const shardData = shardObjects.map(shard => shard.data);
+      const encryptedSecret = SECRETS.combine(shardData);
+      const secret = dehexify(encryptedSecret);
+      const nonce = dehexify(nonces[0]);
+      const salt = hashString(titles[0]);
       return uint8ArrayToStr(decrypt(secret, salt, passphrase, nonce));
-
-    case 1:
-      var shardDataV1 = shardObjects.map(
+    }
+    case 1: {
+      const shardDataV1 = shardObjects.map(
         shard => shard.data[0] + hexify(BASE64.toByteArray(shard.data.slice(1)))
       );
-      var encryptedSecretV1 = SECRETS.combine(shardDataV1);
-      var secretV1 = dehexify(encryptedSecretV1);
-      var nonceV1 = BASE64.toByteArray(nonces[0]);
-      var saltV1 = hashString(titles[0]);
+      const encryptedSecretV1 = SECRETS.combine(shardDataV1);
+      const secretV1 = dehexify(encryptedSecretV1);
+      const nonceV1 = BASE64.toByteArray(nonces[0]);
+      const saltV1 = hashString(titles[0]);
       return uint8ArrayToStr(decrypt(secretV1, saltV1, passphrase, nonceV1));
-
+    }
     default:
       throw "Version is not supported!";
   }

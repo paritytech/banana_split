@@ -1,9 +1,9 @@
 import Vue from "vue";
 import Router from "vue-router";
 
-import Info from "./views/Info";
-import Share from "./views/Share";
-import Combine from "./views/Combine";
+import Info from "./views/Info.vue";
+import Share from "./views/Share.vue";
+import Combine from "./views/Combine.vue";
 
 Vue.use(Router);
 

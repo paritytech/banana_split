@@ -35,22 +35,23 @@
   </div>
 </template>
 
-<script>
-import GeneralInfo from "./components/GeneralInfo";
-import GoOfflineInfo from "./components/GoOfflineInfo";
-import SavePageInfo from "./components/SavePageInfo";
-import ForkMe from "./components/ForkMe";
+<script lang="ts">
+import GeneralInfo from "./components/GeneralInfo.vue";
+import GoOfflineInfo from "./components/GoOfflineInfo.vue";
+import SavePageInfo from "./components/SavePageInfo.vue";
+import ForkMe from "./components/ForkMe.vue";
 
 import { version } from "../package.json";
+import Vue from "vue";
 
-export default {
+export default Vue.extend({
   name: "App",
   components: { GeneralInfo, GoOfflineInfo, SavePageInfo, ForkMe },
   computed: {
-    localFile: function() {
+    localFile(): boolean {
       return window.location.protocol === "file:";
     },
-    secure: function() {
+    secure(): boolean {
       if (process.env.NODE_ENV === "production") {
         return this.localFile && !this.isOnline;
       } else {
@@ -64,7 +65,7 @@ export default {
       return process.env.GIT_REVISION;
     }
   }
-};
+});
 </script>
 
 <style>

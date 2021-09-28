@@ -39,19 +39,21 @@
   </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import Vue from "vue";
+
+export default Vue.extend({
   name: "GeneralInfo",
   data: function() {
     return { unfolded: true };
   },
   created: function() {
-    var self = this;
+    const self = this;
     this.$eventHub.$on("foldGeneralInfo", function() {
       self.unfolded = false;
     });
   }
-};
+});
 </script>
 
 <style>

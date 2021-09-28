@@ -1,9 +1,8 @@
-<script>
-import Vue from "vue";
+<script lang="ts">
+import Vue, { VNode } from "vue";
+import ShardQrCode from "./ShardQrCode.vue";
 
-import ShardQrCode from "./ShardQrCode";
-
-export default {
+export default Vue.extend({
   name: "ShardInfo",
   components: { ShardQrCode },
   props: {
@@ -24,18 +23,23 @@ export default {
     this.vm.$el.remove();
     this.vm.$destroy();
   },
-  render: function() {
-    var element = document.createElement("div");
-    var print = document.getElementById("print");
-    print.appendChild(element);
-    var passedProps = this.$props;
+  render: function(): VNode {
+    const element = document.createElement("div");
+    const print = document.getElementById("print");
+    if (print) {
+      print.appendChild(element);
+    } else {
+      // eslint-disable-next-line no-console
+      console.warn("Failed to find `print` element");
+    }
+    const passedProps = this.$props;
     this.vm = new Vue({
       el: element,
       render: function(h) {
         return h(ShardQrCode, { props: passedProps });
       }
     });
-    return this.vm;
+    return this.vm.$vnode;
   }
-};
+});
 </script>
