@@ -1,4 +1,3 @@
-/*eslint no-console: ["error", { allow: ["warn", "error"] }] */
 import { VueConstructor } from "vue";
 const Hash = require("ipfs-only-hash");
 
@@ -19,6 +18,7 @@ const plugin = {
           vm.$data.cid = hash;
         });
       })
+      // eslint-disable-next-line no-console
       .catch(error => console.error(error));
 
     Vue.mixin({
