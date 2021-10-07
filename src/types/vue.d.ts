@@ -7,5 +7,6 @@ declare module "vue/types/vue" {
     $eventHub: Vue;
     vm: Vue;
     isOnline: boolean;
+    cid: string;
   }
 }
