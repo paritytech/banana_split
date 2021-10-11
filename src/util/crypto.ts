@@ -166,6 +166,8 @@ function reconstruct(shardObjects: Shard[], passphrase: string): string {
     throw "Versions mismatch along shards!";
   }
 
+  let decryptedMsg: Uint8Array | null;
+
   switch (versions[0]) {
     case 0: {
       const shardData = shardObjects.map(shard => shard.data);
@@ -173,7 +175,8 @@ function reconstruct(shardObjects: Shard[], passphrase: string): string {
       const secret = dehexify(encryptedSecret);
       const nonce = dehexify(nonces[0]);
       const salt = hashString(titles[0]);
-      return uint8ArrayToStr(decrypt(secret, salt, passphrase, nonce));
+      decryptedMsg = decrypt(secret, salt, passphrase, nonce);
+      break;
     }
     case 1: {
       const shardDataV1 = shardObjects.map(
@@ -183,11 +186,16 @@ function reconstruct(shardObjects: Shard[], passphrase: string): string {
       const secretV1 = dehexify(encryptedSecretV1);
       const nonceV1 = BASE64.toByteArray(nonces[0]);
       const saltV1 = hashString(titles[0]);
-      return uint8ArrayToStr(decrypt(secretV1, saltV1, passphrase, nonceV1));
+      decryptedMsg = decrypt(secretV1, saltV1, passphrase, nonceV1);
+      break;
     }
     default:
       throw "Version is not supported!";
   }
+  if (!decryptedMsg) {
+    throw "Unable to decrypt the secret";
+  }
+  return uint8ArrayToStr(decryptedMsg);
 }
 
 export default {

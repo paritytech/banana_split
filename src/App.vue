@@ -11,6 +11,8 @@
             🍌
           </span>
         </h1>
+        <Alert />
+        <GeneralInfo />
         <div class="measure">
           <div v-if="secure">
             <router-link class="button-nav" to="/share">
@@ -21,7 +23,6 @@
             </router-link>
           </div>
         </div>
-        <GeneralInfo />
       </nav>
 
       <router-view v-if="secure" />
@@ -36,6 +37,7 @@
 </template>
 
 <script lang="ts">
+import Alert from "./components/Alert.vue";
 import GeneralInfo from "./components/GeneralInfo.vue";
 import GoOfflineInfo from "./components/GoOfflineInfo.vue";
 import SavePageInfo from "./components/SavePageInfo.vue";
@@ -46,7 +48,7 @@ import Vue from "vue";
 
 export default Vue.extend({
   name: "App",
-  components: { GeneralInfo, GoOfflineInfo, SavePageInfo, ForkMe },
+  components: { Alert, GeneralInfo, GoOfflineInfo, SavePageInfo, ForkMe },
   computed: {
     localFile(): boolean {
       return window.location.protocol === "file:";
@@ -130,6 +132,7 @@ body {
 nav {
   display: flex;
   align-items: flex-end;
+  flex-direction: column;
 }
 
 .card,

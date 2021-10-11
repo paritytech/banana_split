@@ -51,9 +51,9 @@ test("fails with incorrect password", () => {
     3
   );
   var parsed = shards.map(s => crypto.parse(s));
-  var reconstructed = crypto.reconstruct(parsed, "");
-  expect(reconstructed).not.toBe("Secret message");
-  expect(reconstructed).toBe("");
+  expect(() => crypto.reconstruct(parsed, "")).toThrow(
+    new Error("Unable to decrypt the secret")
+  );
 });
 
 test("works with unicode strings", () => {

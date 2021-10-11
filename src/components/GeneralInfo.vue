@@ -88,7 +88,7 @@ export default Vue.extend({
 }
 .fold input:checked ~ .fold-content {
   max-height: 999px;
-  margin-bottom: 60px;
+  margin-bottom: 30px;
   opacity: 1;
 }
 
