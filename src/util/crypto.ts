@@ -92,7 +92,7 @@ function decrypt(
   salt: Uint8Array,
   passphrase: string,
   nonce: Uint8Array
-): Uint8Array {
+): Uint8Array | null {
   const key = SCRYPT(passphrase, Buffer.from(salt.buffer), 1 << 15, 8, 1, 32);
   // This is a false positive, `secretbox.open` is unrelated to `fs.open`
   // eslint-disable-next-line security/detect-non-literal-fs-filename

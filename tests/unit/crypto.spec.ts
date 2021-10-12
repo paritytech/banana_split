@@ -52,7 +52,7 @@ test("fails with incorrect password", () => {
   );
   var parsed = shards.map(s => crypto.parse(s));
   expect(() => crypto.reconstruct(parsed, "")).toThrow(
-    new Error("Unable to decrypt the secret")
+    "Unable to decrypt the secret"
   );
 });
 

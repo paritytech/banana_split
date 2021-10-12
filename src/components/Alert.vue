@@ -31,17 +31,16 @@ export default Vue.extend({
     };
   },
   created: function() {
-    const self = this;
-    this.$eventHub.$on("showError", function(text: string) {
-      self.level = AlertLevel.Error;
-      self.message = text;
+    this.$eventHub.$on("showError", (text: string) => {
+      this.level = AlertLevel.Error;
+      this.message = text;
     });
-    this.$eventHub.$on("showWarn", function(text: string) {
-      self.level = AlertLevel.Warn;
-      self.message = text;
+    this.$eventHub.$on("showWarn", (text: string) => {
+      this.level = AlertLevel.Warn;
+      this.message = text;
     });
-    this.$eventHub.$on("clearAlerts", function() {
-      self.message = null;
+    this.$eventHub.$on("clearAlerts", () => {
+      this.message = null;
     });
   }
 });
