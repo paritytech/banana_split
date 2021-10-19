@@ -54,8 +54,6 @@
 </template>
 
 <script lang="ts">
-/*eslint no-console: ["error", { allow: ["warn", "error"] }] */
-
 import crypto, { Shard } from "../util/crypto";
 import Vue from "vue";
 
@@ -98,22 +96,34 @@ export default Vue.extend({
   },
   mounted: function() {
     this.$eventHub.$emit("foldGeneralInfo");
+    this.$eventHub.$emit("clearAlerts");
   },
   methods: {
-    onDecode: function(result: string) {
-      if (this.qrCodes.has(result)) {
-        console.warn("Shard already seen");
+    onDecode: function(result: string): string | void {
+      this.$eventHub.$emit("clearAlerts");
+      if (result === "") {
         return;
       }
-      const parsed = crypto.parse(result);
+      if (this.qrCodes.has(result)) {
+        this.$eventHub.$emit("showWarn", "Shard already seen");
+        return;
+      }
+      let parsed;
+      try {
+        parsed = crypto.parse(result);
+      } catch (error) {
+        this.$eventHub.$emit("showError", error);
+        return;
+      }
+
       if (this.title && this.title !== parsed.title) {
-        console.error("title mismatch!");
+        this.$eventHub.$emit("showError", "title mismatch!");
         return;
       } else {
         this.title = parsed.title;
       }
       if (this.nonce && this.nonce !== parsed.nonce) {
-        console.error("nonce mismatch!");
+        this.$eventHub.$emit("showError", "nonce mismatch!");
         return;
       } else {
         this.nonce = parsed.nonce;
@@ -122,7 +132,7 @@ export default Vue.extend({
         this.requiredShards &&
         this.requiredShards !== parsed.requiredShards
       ) {
-        console.error("requiredShards mismatch");
+        this.$eventHub.$emit("showError", "requiredShards mismatch");
         return;
       } else {
         this.requiredShards = parsed.requiredShards;
@@ -130,7 +140,7 @@ export default Vue.extend({
       this.qrCodes.add(result);
       this.shards.push(parsed);
     },
-    reconstruct: function() {
+    reconstruct: function(): void {
       if (!this.passphrase) {
         return;
       }
@@ -139,7 +149,11 @@ export default Vue.extend({
         .filter(el => el)
         .join("-");
       const shards = Array.from(this.shards);
-      this.recoveredSecret = crypto.reconstruct(shards, this.passphrase);
+      try {
+        this.recoveredSecret = crypto.reconstruct(shards, this.passphrase);
+      } catch (error) {
+        this.$eventHub.$emit("showError", error);
+      }
     }
   }
 });

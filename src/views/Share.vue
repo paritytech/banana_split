@@ -30,8 +30,14 @@
         <label>3. Shards</label>
         <br />
         Will require any {{ requiredShards }} shards out of
-        <input v-model.number="totalShards" type="number" min="3" /> to
-        reconstruct
+        <input
+          v-model.number="totalShards"
+          :disabled="encryptionMode"
+          type="number"
+          min="3"
+          max="255"
+        />
+        to reconstruct
       </p>
       <button
         class="button-card"
@@ -105,20 +111,28 @@ export default Vue.extend({
       return Math.floor(this.totalShards / 2) + 1;
     },
     shards(): string[] {
+      this.$eventHub.$emit("clearAlerts");
       if (!this.encryptionMode) {
         return [];
       }
-      return crypto.share(
-        this.secret,
-        this.title,
-        this.recoveryPassphrase,
-        this.totalShards,
-        this.requiredShards
-      );
+      try {
+        return crypto.share(
+          this.secret,
+          this.title,
+          this.recoveryPassphrase,
+          this.totalShards,
+          this.requiredShards
+        );
+      } catch (error) {
+        this.$eventHub.$emit("showError", error);
+        this.toggleMode(); // back to editing
+      }
+      return [];
     }
   },
   mounted: function() {
     this.$eventHub.$emit("foldGeneralInfo");
+    this.$eventHub.$emit("clearAlerts");
   },
   methods: {
     regenPassphrase: function() {
@@ -139,7 +153,7 @@ textarea.tooLong {
   border: 5px solid red;
 }
 input[type="number"] {
-  width: 48px;
+  width: 64px;
   text-align: center;
 }
 .error-text {
