@@ -14,6 +14,7 @@
         <p>
           <label>1. Secret Phrase</label>
           <input
+            id="passphrase"
             v-model="passphrase"
             type="text"
             placeholder="type your passphrase"
@@ -23,11 +24,16 @@
         </p>
         <p>
           <label>2. Secret</label>
-          <textarea v-if="recoveredSecret" v-model="recoveredSecret" readonly />
+          <textarea
+            v-if="recoveredSecret"
+            id="recoveredSecret"
+            v-model="recoveredSecret"
+            readonly
+          />
           <textarea v-else readonly disabled />
         </p>
         <div v-if="!recoveredSecret">
-          <button class="button-card" @click="reconstruct">
+          <button id="reconstructBtn" class="button-card" @click="reconstruct">
             Reconstruct Secret
           </button>
         </div>

@@ -20,4 +20,4 @@ yarn-error.log*
 *.sln
 *.sw*
 
-.test-results
+test-results

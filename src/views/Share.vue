@@ -7,6 +7,7 @@
       <p>
         <label>1. Name of your split</label>
         <input
+          id="secretTitle"
           v-model="title"
           type="text"
           :disabled="encryptionMode"
@@ -17,6 +18,7 @@
       <p>
         <label>2. Secret</label>
         <textarea
+          id="secret"
           v-model="secret"
           :class="{ tooLong: secretTooLong }"
           :disabled="encryptionMode"
@@ -31,6 +33,7 @@
         <br />
         Will require any {{ requiredShards }} shards out of
         <input
+          id="totalShards"
           v-model.number="totalShards"
           :disabled="encryptionMode"
           type="number"
@@ -40,12 +43,22 @@
         to reconstruct
       </p>
       <button
+        id="generateBtn"
         class="button-card"
         :disabled="secretTooLong"
+        :hidden="encryptionMode"
         v-on:click="toggleMode"
       >
-        <span v-if="encryptionMode">Back to editing data</span>
-        <span v-else>Generate QR codes!</span>
+        Generate QR codes!
+      </button>
+      <button
+        id="backToEditBtn"
+        class="button-card"
+        :disabled="secretTooLong"
+        :hidden="!encryptionMode"
+        v-on:click="toggleMode"
+      >
+        Back to editing data
       </button>
     </div>
 
@@ -60,7 +73,7 @@
         </div>
       </div>
       <div class="card" transparent="true">
-        <button class="button-card" @click="print">
+        <button id="printBtn" class="button-card" @click="print">
           Print us!
         </button>
         <shard-info
@@ -99,7 +112,7 @@ export default Vue.extend({
       title: "",
       secret: "",
       totalShards: 3, // TODO: 5
-      recoveryPassphrase: passPhrase.generate(4),
+      recoveryPassphrase: "",
       encryptionMode: false
     };
   },
@@ -130,12 +143,19 @@ export default Vue.extend({
       return [];
     }
   },
+  created: function() {
+    this.regenPassphrase();
+  },
   mounted: function() {
     this.$eventHub.$emit("foldGeneralInfo");
     this.$eventHub.$emit("clearAlerts");
   },
   methods: {
     regenPassphrase: function() {
+      if (process.env.NODE_ENV === "test") {
+        this.recoveryPassphrase = "TEST";
+        return;
+      }
       this.recoveryPassphrase = passPhrase.generate(4);
     },
     print: function() {
