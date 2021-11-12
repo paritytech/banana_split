@@ -1,0 +1,25 @@
+name: End to end test
+
+on: push
+
+jobs:
+  e2e-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Read .nvmrc
+        run: echo NVMRC=`cat .nvmrc` >> $GITHUB_ENV
+
+      - name: Setup node
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ env.NVMRC }}
+          cache: 'yarn'
+
+      - run: yarn install
+
+      - name: Install operating system dependencies
+        run: npx playwright install-deps
+
+      - run: npm run test:e2e
