@@ -65,9 +65,14 @@ yarn run serve
 yarn run build
 ```
 
-#### Run your tests
+#### Run unit tests
 ```
 yarn run test:unit
+```
+
+#### Run end-to-end UI tests
+```
+yarn run test:e2e
 ```
 
 #### Lints and fixes files
