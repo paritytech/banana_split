@@ -19,8 +19,8 @@ export default Vue.extend({
       context.clearRect(0, 0, canvasElement.width, canvasElement.height);
       context.fillStyle = "black";
       context.font = "20px Arial";
-      const textSize = context.measureText(binding.value);
-      canvasElement.setAttribute("width", textSize.width + 20 + "px");
+      const textWidth = context.measureText(binding.value).width || 450;
+      canvasElement.setAttribute("width", textWidth + 20 + "px");
       context.font = "20px Arial";
       context.fillText(binding.value, 15, 20);
     }
