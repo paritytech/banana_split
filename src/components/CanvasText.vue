@@ -9,8 +9,8 @@ export default Vue.extend({
   name: "CanvasText",
   directives: {
     canvasMessage: function(el: HTMLElement, binding: VNodeDirective): void {
-      const canvasElement = el as HTMLCanvasElement,
-        context = canvasElement.getContext("2d");
+      const canvasElement = el as HTMLCanvasElement;
+      const context = canvasElement.getContext("2d");
       if (!context) {
         // eslint-disable-next-line no-console
         console.warn("Failed to find canvasElement context");
@@ -20,9 +20,10 @@ export default Vue.extend({
       context.fillStyle = "black";
       context.font = "20px Arial";
       const textWidth = context.measureText(binding.value).width || 450;
-      canvasElement.setAttribute("width", textWidth + 20 + "px");
+      const padLeftPx = 15;
+      canvasElement.setAttribute("width", textWidth + padLeftPx + "px");
       context.font = "20px Arial";
-      context.fillText(binding.value, 15, 20);
+      context.fillText(binding.value, padLeftPx, 20);
     }
   },
   props: {
