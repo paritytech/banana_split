@@ -15,10 +15,10 @@
         <GeneralInfo />
         <div class="measure">
           <div v-if="secure">
-            <router-link class="button-nav" to="/share">
+            <router-link id="shareNav" class="button-nav" to="/share">
               Create
             </router-link>
-            <router-link class="button-nav" to="/combine">
+            <router-link id="combineNav" class="button-nav" to="/combine">
               Restore
             </router-link>
           </div>
