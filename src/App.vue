@@ -3,34 +3,23 @@
     <div id="app" class="measure">
       <ForkMe url="https://github.com/paritytech/banana_split" />
       <nav>
-        <h1 id="logo">
-          Banana
-          <br />
-          Split
-          <span>
+        <router-link id="logo" to="/">
+          <span class="logo-text">
+            Banana Split
+          </span>
+          <span class="logo-icon">
             🍌
           </span>
-        </h1>
+        </router-link>
         <Alert />
-        <GeneralInfo />
-        <div class="measure">
-          <div v-if="secure">
-            <router-link id="shareNav" class="button-nav" to="/share">
-              Create
-            </router-link>
-            <router-link id="combineNav" class="button-nav" to="/combine">
-              Restore
-            </router-link>
-          </div>
-        </div>
       </nav>
 
       <router-view v-if="secure" />
       <SavePageInfo v-else-if="!localFile" />
       <GoOfflineInfo v-else-if="isOnline" />
-      <p class="version-footer">
+      <div class="version-footer">
         BananaSplit version {{ version }}, git revision {{ gitRevision }}
-      </p>
+      </div>
     </div>
     <div id="print" class="measure flex" />
   </div>
@@ -38,7 +27,6 @@
 
 <script lang="ts">
 import Alert from "./components/Alert.vue";
-import GeneralInfo from "./components/GeneralInfo.vue";
 import GoOfflineInfo from "./components/GoOfflineInfo.vue";
 import SavePageInfo from "./components/SavePageInfo.vue";
 import ForkMe from "./components/ForkMe.vue";
@@ -48,7 +36,7 @@ import Vue from "vue";
 
 export default Vue.extend({
   name: "App",
-  components: { Alert, GeneralInfo, GoOfflineInfo, SavePageInfo, ForkMe },
+  components: { Alert, GoOfflineInfo, SavePageInfo, ForkMe },
   computed: {
     localFile(): boolean {
       return window.location.protocol === "file:";
@@ -91,7 +79,7 @@ export default Vue.extend({
 }
 html {
   font-family: var(--f_main);
-  font-size: 8px;
+  font-size: 9px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -214,12 +202,12 @@ nav {
 
 h1 {
   font-weight: 600;
-  font-size: 3rem;
+  font-size: 3.5rem;
   line-height: 0.9em;
   letter-spacing: -0.02em;
 }
 h2 {
-  font-size: 2.3rem;
+  font-size: 2.5rem;
   font-weight: 500;
 }
 a {
@@ -247,25 +235,33 @@ textarea:disabled {
   background: transparent;
   opacity: 0.5;
 }
-
 #logo {
-  margin: 0 2rem 0 0;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 250%;
+  margin: 10px auto 0;
+  color: var(--c_text-main);
 }
-#logo span {
-  font-size: 1.2em;
-  position: absolute;
-  margin: 0.25em 0 0 0.1em;
+#logo:hover > .logo-text {
+  text-decoration: underline;
 }
-
+#logo > .logo-icon {
+  position: relative;
+  top: 5px;
+  left: 5px;
+  font-size: 140%;
+}
 .button-nav {
   display: inline-block;
   font-weight: 600;
   font-size: 1.4em;
-  color: var(--c_text-main);
   border: 1px solid transparent;
   padding: 1rem 3rem 1.2rem;
   margin: 0 1rem 0 0;
   border-radius: 1rem;
+  text-decoration: none;
+  background-color: var(--c_bg-emphasis-main);
+  color: var(--c_text-onEmphasis);
   text-decoration: none;
 }
 .button-nav:hover,
@@ -273,7 +269,8 @@ textarea:disabled {
   border-color: var(--c_border-main);
 }
 .button-nav.router-link-exact-active {
-  background: white;
+  background-color: var(--c_bg-app);
+  color: var(--c_text-main);
 }
 
 button {
@@ -292,23 +289,11 @@ button {
 }
 
 .version-footer {
+  padding-top: 30px;
   font-size: 80%;
   font-style: italic;
   color: darkgray;
-}
-
-@media screen and (min-width: 850px) {
-  #logo {
-    position: absolute;
-    top: 2.5rem;
-    left: 2rem;
-    margin: 0;
-  }
-}
-@media screen and (max-width: 530px) {
-  #logo {
-    display: none;
-  }
+  text-align: center;
 }
 @media screen and (max-width: 415px) {
   .fold input:checked ~ .fold-content {

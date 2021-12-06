@@ -1,6 +1,6 @@
 <template>
   <span id="forkongithub">
-    <a :href="url">🥄Fork me on GitHub</a>
+    <a :href="url">🥄&nbsp;Fork me on GitHub</a>
   </span>
 </template>
 
@@ -31,7 +31,7 @@ export default {
   text-align: center;
   font-weight: bold;
   padding: 0.5rem 0 1rem;
-  font-size: 2rem;
+  font-size: 1.5rem;
   width: 240px;
   position: absolute;
   bottom: 40px;
