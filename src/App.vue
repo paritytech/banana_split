@@ -18,7 +18,7 @@
       <SavePageInfo v-else-if="!localFile" />
       <GoOfflineInfo v-else-if="isOnline" />
       <div class="version-footer">
-        BananaSplit version {{ version }}, git revision {{ gitRevision }}
+        {{ gitRevision }}
       </div>
     </div>
     <div id="print" class="measure flex" />
@@ -31,7 +31,6 @@ import GoOfflineInfo from "./components/GoOfflineInfo.vue";
 import SavePageInfo from "./components/SavePageInfo.vue";
 import ForkMe from "./components/ForkMe.vue";
 
-import { version } from "../package.json";
 import Vue from "vue";
 
 export default Vue.extend({
@@ -47,9 +46,6 @@ export default Vue.extend({
       } else {
         return true;
       }
-    },
-    version: function() {
-      return version;
     },
     gitRevision: function() {
       return process.env.GIT_REVISION;
