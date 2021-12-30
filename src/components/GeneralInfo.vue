@@ -8,7 +8,7 @@
         Shamir's secret sharing scheme</a>.
       You can encrypt and split particularly sensitive information 
       so that it's not physically stored in one place — your master 
-      assword, seed phrase, etc.
+      password, seed phrase, etc.
     </p>
     <h2>How does it work?</h2>
     <p>
