@@ -137,13 +137,6 @@ export default Vue.extend({
       } else {
         this.nonce = parsed.nonce;
       }
-      if (
-        this.requiredShards &&
-        this.requiredShards < (parsed.requiredShards*2)-1
-      ) {
-        this.$eventHub.$emit("showError", "Mismatch on the parsed QR Count");
-        return;
-      } 
       this.qrCodes.add(result);
       this.shards.push(parsed);
     },
