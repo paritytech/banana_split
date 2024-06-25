@@ -9,6 +9,9 @@
         <router-link id="combineNav" class="button-nav" to="/combine">
           Restore
         </router-link>
+        <router-link id="printNav" class="button-nav" to="/print">
+          Print
+        </router-link>
       </div>
     </div>
   </div>
