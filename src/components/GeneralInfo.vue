@@ -4,7 +4,11 @@
     <p>
       Banana Split is a self-contained HTML page, which makes your paper 
       backups more resilient and secure using 
-      <a href="https://en.wikipedia.org/wiki/Shamir%27s_Secret_Sharing" target="_blank">
+      <a
+        href="https://en.wikipedia.org/wiki/Shamir%27s_Secret_Sharing"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
         Shamir's secret sharing scheme</a>.
       You can encrypt and split particularly sensitive information 
       so that it's not physically stored in one place — your master 
