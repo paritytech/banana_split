@@ -91,6 +91,7 @@
 <script lang="ts">
 import passPhrase from "../util/passPhrase";
 import crypto from "../util/crypto";
+import { defaultThreshold } from "../util/shards";
 
 import ShardInfo from "../components/ShardInfo.vue";
 import CanvasText from "../components/CanvasText.vue";
@@ -121,7 +122,7 @@ export default Vue.extend({
       return this.secret.length > 1024;
     },
     requiredShards(): number {
-      return Math.floor(this.totalShards / 2) + 1;
+      return defaultThreshold(this.totalShards);
     },
     shards(): string[] {
       this.$eventHub.$emit("clearAlerts");
