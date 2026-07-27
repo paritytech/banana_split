@@ -39,13 +39,18 @@
           type="number"
           min="3"
           max="255"
+          step="1"
         />
         to reconstruct
+        <br />
+        <span v-if="!shardCountValid" class="error-text">
+          Enter a whole number of shards between 3 and 255
+        </span>
       </p>
       <button
         id="generateBtn"
         class="button-card"
-        :disabled="secretTooLong"
+        :disabled="secretTooLong || !shardCountValid"
         :hidden="encryptionMode"
         v-on:click="toggleMode"
       >
@@ -91,7 +96,7 @@
 <script lang="ts">
 import passPhrase from "../util/passPhrase";
 import crypto from "../util/crypto";
-import { defaultThreshold } from "../util/shards";
+import { defaultThreshold, isValidShardCount } from "../util/shards";
 
 import ShardInfo from "../components/ShardInfo.vue";
 import CanvasText from "../components/CanvasText.vue";
@@ -120,6 +125,11 @@ export default Vue.extend({
   computed: {
     secretTooLong(): boolean {
       return this.secret.length > 1024;
+    },
+    // Gates generation the same way `secretTooLong` does: a fractional or empty
+    // count would otherwise reach crypto.share() and fail deep inside secrets.js.
+    shardCountValid(): boolean {
+      return isValidShardCount(this.totalShards);
     },
     requiredShards(): number {
       return defaultThreshold(this.totalShards);
