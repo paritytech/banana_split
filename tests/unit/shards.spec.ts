@@ -16,9 +16,14 @@ describe("defaultThreshold", () => {
     expect(defaultThreshold(total)).toBe(expected);
   });
 
-  test("always requires a strict majority across the whole UI range", () => {
+  // A lower bound alone is too weak to pin the policy: floor(8/2)+2 = 6 is also
+  // "more than half of 8". Assert the threshold is the *smallest* strict
+  // majority, which is the property that makes floor(n/2)+1 the only answer.
+  test("is the smallest strict majority across the whole UI range", () => {
     for (let n = 3; n <= 255; n++) {
-      expect(defaultThreshold(n)).toBeGreaterThan(n / 2);
+      const threshold = defaultThreshold(n);
+      expect(threshold).toBeGreaterThan(n / 2);
+      expect(threshold - 1).toBeLessThanOrEqual(n / 2);
     }
   });
 });

@@ -31,7 +31,7 @@
       <p>
         <label>3. Shards</label>
         <br />
-        Will require any {{ requiredShards }} shards out of
+        Will require any {{ requiredShardsLabel }} shards out of
         <input
           id="totalShards"
           v-model.number="totalShards"
@@ -67,7 +67,7 @@
       </button>
     </div>
 
-    <div v-if="encryptionMode">
+    <div v-if="encryptionMode && requiredShards !== undefined">
       <div class="card" framed="true" transparent="true">
         <label>4. Your passphrase for the recovery is:</label>
         <div class="flex justify-between align-center">
@@ -131,12 +131,18 @@ export default Vue.extend({
     shardCountValid(): boolean {
       return isValidShardCount(this.totalShards);
     },
-    requiredShards(): number {
-      return defaultThreshold(this.totalShards);
+    // Same contract as Print.vue's `threshold`: `undefined` while the count is
+    // not usable, so a coerced value ("" divides to 0, giving a bogus 1) can
+    // neither be printed nor reach ShardInfo's required Number prop.
+    requiredShards(): number | undefined {
+      return isValidShardCount(this.totalShards) ? defaultThreshold(this.totalShards) : undefined;
+    },
+    requiredShardsLabel(): string {
+      return this.requiredShards === undefined ? "—" : String(this.requiredShards);
     },
     shards(): string[] {
       this.$eventHub.$emit("clearAlerts");
-      if (!this.encryptionMode) {
+      if (!this.encryptionMode || this.requiredShards === undefined) {
         return [];
       }
       try {
