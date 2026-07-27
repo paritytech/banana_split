@@ -1,4 +1,4 @@
-import { defaultThreshold } from "../../src/util/shards";
+import { defaultThreshold, isValidShardCount } from "../../src/util/shards";
 
 describe("defaultThreshold", () => {
   // The bug fixed in F5 was Print.vue computing floor(total/2)+2 instead of
@@ -20,5 +20,33 @@ describe("defaultThreshold", () => {
     for (let n = 3; n <= 255; n++) {
       expect(defaultThreshold(n)).toBeGreaterThan(n / 2);
     }
+  });
+});
+
+describe("isValidShardCount", () => {
+  test("accepts every whole number the UI offers", () => {
+    for (let n = 3; n <= 255; n++) {
+      expect(isValidShardCount(n)).toBe(true);
+    }
+  });
+
+  // Annotated as unknown[][] on purpose: these are the values the input can
+  // actually hand us, not just out-of-range numbers.
+  const rejected: unknown[][] = [
+    [2, "below the minimum"],
+    [256, "above the maximum"],
+    [0, "zero"],
+    [-5, "negative"],
+    [3.5, "fractional — type=number accepts it, step=1 only nudges the spinner"],
+    [Number.NaN, "NaN"],
+    [Number.POSITIVE_INFINITY, "infinite"],
+    ["", "an emptied input, which v-model.number leaves as a string"],
+    ["5", "a numeric string"],
+    [undefined, "the initial data value"],
+    [null, "null"]
+  ];
+
+  test.each(rejected)("rejects %p (%s)", value => {
+    expect(isValidShardCount(value)).toBe(false);
   });
 });

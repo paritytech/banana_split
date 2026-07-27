@@ -6,3 +6,11 @@
 export function defaultThreshold(totalShards: number): number {
   return Math.floor(totalShards / 2) + 1;
 }
+
+// Mirrors the min/max on the shard-count inputs. `v-model.number` on an
+// `<input type="number">` hands us whatever the field holds, which includes ""
+// for an empty box and fractions like 3.5 — neither is a shard count, so the
+// range check alone is not enough.
+export function isValidShardCount(value: unknown): value is number {
+  return typeof value === "number" && Number.isInteger(value) && value >= 3 && value <= 255;
+}

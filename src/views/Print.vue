@@ -15,6 +15,7 @@
               type="number"
               min="3"
               max="255"
+              step="1"
             />
           </p>
           <button id="generateBtn" class="button-card" @click="handleShardsInput">
@@ -28,7 +29,7 @@
       <div v-if="numberEntered && needMoreShards">
         <qrcode-stream @decode="onDecode" />
       </div>
-      <div v-else-if="numberEntered">
+      <div v-else-if="numberEntered && threshold !== undefined">
         <button id="printBtn" class="button-card" @click="print">
           Print us!
         </button>
@@ -64,7 +65,7 @@
 
 <script lang="ts">
 import crypto, { Shard } from "../util/crypto";
-import { defaultThreshold } from "../util/shards";
+import { defaultThreshold, isValidShardCount } from "../util/shards";
 import ShardInfo from "../components/ShardInfo.vue";
 
 import Vue from "vue";
@@ -95,17 +96,21 @@ export default Vue.extend({
   },
   computed: {
     needMoreShards(): boolean {
-      return this.totalShards !== undefined && this.shards.length !== this.totalShards;
+      // Strictly "fewer than": scanning more codes than announced must not keep
+      // the scanner open (and must not make `remainingCodes` go negative).
+      return this.totalShards !== undefined && this.shards.length < this.totalShards;
     },
     remainingCodes(): number {
       if (!this.totalShards) {
         return 0;
       } else {
-        return this.totalShards - this.shards.length;
+        return Math.max(0, this.totalShards - this.shards.length);
       }
     },
-    threshold(): number {
-      return this.totalShards ? defaultThreshold(this.totalShards) : 0;
+    // `undefined` until a valid count has been entered, so "not asked yet" stays
+    // distinguishable from a real threshold; the template guards on it.
+    threshold(): number | undefined {
+      return isValidShardCount(this.totalShards) ? defaultThreshold(this.totalShards) : undefined;
     }
   },
   mounted: function() {
@@ -148,10 +153,10 @@ export default Vue.extend({
       window.print();
     },
     handleShardsInput: function() {
-      if (this.totalShards && this.totalShards >= 3 && this.totalShards <= 255) {
+      if (isValidShardCount(this.totalShards)) {
         this.numberEntered = true;
       } else {
-        this.$eventHub.$emit("showError", "Please enter a valid number of shards between 3 and 255.");
+        this.$eventHub.$emit("showError", "Please enter a whole number of shards between 3 and 255.");
       }
     },
     toggleMode: function() {
