@@ -11,10 +11,11 @@
             <br>
             <input
               id="totalShards"
-              v-model.number="requiredShards"
+              v-model.number="totalShards"
               type="number"
               min="3"
               max="255"
+              step="1"
             />
           </p>
           <button id="generateBtn" class="button-card" @click="handleShardsInput">
@@ -28,7 +29,7 @@
       <div v-if="numberEntered && needMoreShards">
         <qrcode-stream @decode="onDecode" />
       </div>
-      <div v-else-if="numberEntered">
+      <div v-else-if="numberEntered && threshold !== undefined">
         <button id="printBtn" class="button-card" @click="print">
           Print us!
         </button>
@@ -36,7 +37,7 @@
           v-for="code in qrCodes"
           :key="code"
           :shard="code"
-          :required-shards="parseInt(requiredShards/2)+2"
+          :required-shards="threshold"
           :title="title"
         />
       </div>
@@ -64,6 +65,7 @@
 
 <script lang="ts">
 import crypto, { Shard } from "../util/crypto";
+import { defaultThreshold, isValidShardCount } from "../util/shards";
 import ShardInfo from "../components/ShardInfo.vue";
 
 import Vue from "vue";
@@ -73,7 +75,7 @@ type PrintData = {
   nonce: string;
   shards: Shard[];
   qrCodes: Set<string>;
-  requiredShards?: number;
+  totalShards?: number;
   numberEntered: boolean;
   PLACEHOLDER_QR_DATA: string;
 };
@@ -87,21 +89,28 @@ export default Vue.extend({
       nonce: "",
       shards: [],
       qrCodes: new Set(),
-      requiredShards: undefined,
+      totalShards: undefined,
       numberEntered: false,
       PLACEHOLDER_QR_DATA: ""
     };
   },
   computed: {
     needMoreShards(): boolean {
-      return this.requiredShards !== undefined && this.shards.length !== this.requiredShards;
+      // Strictly "fewer than": scanning more codes than announced must not keep
+      // the scanner open (and must not make `remainingCodes` go negative).
+      return this.totalShards !== undefined && this.shards.length < this.totalShards;
     },
     remainingCodes(): number {
-      if (!this.requiredShards) {
+      if (!this.totalShards) {
         return 0;
       } else {
-        return this.requiredShards - this.shards.length;
+        return Math.max(0, this.totalShards - this.shards.length);
       }
+    },
+    // `undefined` until a valid count has been entered, so "not asked yet" stays
+    // distinguishable from a real threshold; the template guards on it.
+    threshold(): number | undefined {
+      return isValidShardCount(this.totalShards) ? defaultThreshold(this.totalShards) : undefined;
     }
   },
   mounted: function() {
@@ -144,10 +153,10 @@ export default Vue.extend({
       window.print();
     },
     handleShardsInput: function() {
-      if (this.requiredShards && this.requiredShards >= 3 && this.requiredShards <= 255) {
+      if (isValidShardCount(this.totalShards)) {
         this.numberEntered = true;
       } else {
-        this.$eventHub.$emit("showError", "Please enter a valid number of shards between 3 and 255.");
+        this.$eventHub.$emit("showError", "Please enter a whole number of shards between 3 and 255.");
       }
     },
     toggleMode: function() {

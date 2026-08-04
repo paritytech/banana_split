@@ -31,7 +31,7 @@
       <p>
         <label>3. Shards</label>
         <br />
-        Will require any {{ requiredShards }} shards out of
+        Will require any {{ requiredShardsLabel }} shards out of
         <input
           id="totalShards"
           v-model.number="totalShards"
@@ -39,13 +39,18 @@
           type="number"
           min="3"
           max="255"
+          step="1"
         />
         to reconstruct
+        <br />
+        <span v-if="!shardCountValid" class="error-text">
+          Enter a whole number of shards between 3 and 255
+        </span>
       </p>
       <button
         id="generateBtn"
         class="button-card"
-        :disabled="secretTooLong"
+        :disabled="secretTooLong || !shardCountValid"
         :hidden="encryptionMode"
         v-on:click="toggleMode"
       >
@@ -62,7 +67,7 @@
       </button>
     </div>
 
-    <div v-if="encryptionMode">
+    <div v-if="encryptionMode && requiredShards !== undefined">
       <div class="card" framed="true" transparent="true">
         <label>4. Your passphrase for the recovery is:</label>
         <div class="flex justify-between align-center">
@@ -91,6 +96,7 @@
 <script lang="ts">
 import passPhrase from "../util/passPhrase";
 import crypto from "../util/crypto";
+import { defaultThreshold, isValidShardCount } from "../util/shards";
 
 import ShardInfo from "../components/ShardInfo.vue";
 import CanvasText from "../components/CanvasText.vue";
@@ -120,12 +126,23 @@ export default Vue.extend({
     secretTooLong(): boolean {
       return this.secret.length > 1024;
     },
-    requiredShards(): number {
-      return Math.floor(this.totalShards / 2) + 1;
+    // Gates generation the same way `secretTooLong` does: a fractional or empty
+    // count would otherwise reach crypto.share() and fail deep inside secrets.js.
+    shardCountValid(): boolean {
+      return isValidShardCount(this.totalShards);
+    },
+    // Same contract as Print.vue's `threshold`: `undefined` while the count is
+    // not usable, so a coerced value ("" divides to 0, giving a bogus 1) can
+    // neither be printed nor reach ShardInfo's required Number prop.
+    requiredShards(): number | undefined {
+      return isValidShardCount(this.totalShards) ? defaultThreshold(this.totalShards) : undefined;
+    },
+    requiredShardsLabel(): string {
+      return this.requiredShards === undefined ? "—" : String(this.requiredShards);
     },
     shards(): string[] {
       this.$eventHub.$emit("clearAlerts");
-      if (!this.encryptionMode) {
+      if (!this.encryptionMode || this.requiredShards === undefined) {
         return [];
       }
       try {
